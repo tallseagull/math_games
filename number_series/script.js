@@ -9,6 +9,12 @@ function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Check if a series is within bounds (1 to 200)
+function isSeriesValid(series) {
+    const allNumbers = [...series.series, ...series.answers];
+    return allNumbers.every(num => num >= 1 && num <= 200);
+}
+
 // Generate a single number series
 function generateSeries() {
     const ruleTypes = [
@@ -22,36 +28,78 @@ function generateSeries() {
         'alternating_operations'
     ];
     
-    const ruleType = ruleTypes[randomInt(0, ruleTypes.length - 1)];
+    let series;
+    let attempts = 0;
+    const maxAttempts = 50;
     
-    switch (ruleType) {
-        case 'arithmetic_constant':
-            return generateArithmeticConstant();
-        case 'arithmetic_variable':
-            return generateArithmeticVariable();
-        case 'geometric_constant':
-            return generateGeometricConstant();
-        case 'positional_powers':
-            return generatePositionalPowers();
-        case 'positional_powers_offset':
-            return generatePositionalPowersOffset();
-        case 'recursive_fibonacci':
-            return generateRecursiveFibonacci();
-        case 'mixed_operations':
-            return generateMixedOperations();
-        case 'alternating_operations':
-            return generateAlternatingOperations();
-        default:
-            return generateArithmeticConstant();
+    do {
+        const ruleType = ruleTypes[randomInt(0, ruleTypes.length - 1)];
+        
+        switch (ruleType) {
+            case 'arithmetic_constant':
+                series = generateArithmeticConstant();
+                break;
+            case 'arithmetic_variable':
+                series = generateArithmeticVariable();
+                break;
+            case 'geometric_constant':
+                series = generateGeometricConstant();
+                break;
+            case 'positional_powers':
+                series = generatePositionalPowers();
+                break;
+            case 'positional_powers_offset':
+                series = generatePositionalPowersOffset();
+                break;
+            case 'recursive_fibonacci':
+                series = generateRecursiveFibonacci();
+                break;
+            case 'mixed_operations':
+                series = generateMixedOperations();
+                break;
+            case 'alternating_operations':
+                series = generateAlternatingOperations();
+                break;
+            default:
+                series = generateArithmeticConstant();
+        }
+        attempts++;
+    } while (!isSeriesValid(series) && attempts < maxAttempts);
+    
+    // If we couldn't generate a valid series after max attempts, return a simple arithmetic one
+    if (!isSeriesValid(series)) {
+        return generateSimpleArithmetic();
     }
+    
+    return series;
+}
+
+// Fallback function for simple arithmetic series
+function generateSimpleArithmetic() {
+    const start = randomInt(1, 50);
+    const difference = randomInt(1, 10);
+    const length = 5;
+    const series = [];
+    
+    for (let i = 0; i < length; i++) {
+        series.push(start + (i * difference));
+    }
+    
+    const next1 = series[series.length - 1] + difference;
+    const next2 = next1 + difference;
+    
+    return {
+        series: series,
+        answers: [next1, next2],
+        rule: `Add ${difference} each time`,
+        ruleType: 'arithmetic_constant'
+    };
 }
 
 // 1. Arithmetic Progressions - Constant Difference
 function generateArithmeticConstant() {
-    const start = randomInt(1, 50);
-    const difference = randomInt(-20, 20);
-    if (difference === 0) return generateArithmeticConstant(); // Avoid zero difference
-    
+    const start = randomInt(1, 100);
+    const difference = randomInt(1, 15); // Only positive differences to avoid negatives
     const length = randomInt(5, 7);
     const series = [];
     
@@ -72,14 +120,14 @@ function generateArithmeticConstant() {
 
 // 2. Arithmetic Progressions - Variable Difference
 function generateArithmeticVariable() {
-    const start = randomInt(1, 30);
+    const start = randomInt(1, 50);
     const length = randomInt(5, 7);
     const series = [start];
     
-    // Generate variable differences
+    // Generate variable differences (smaller to stay within bounds)
     const differences = [];
     for (let i = 0; i < length + 1; i++) {
-        differences.push(randomInt(1, 10));
+        differences.push(randomInt(1, 8));
     }
     
     for (let i = 1; i < length; i++) {
@@ -99,9 +147,9 @@ function generateArithmeticVariable() {
 
 // 3. Geometric Progressions - Constant Ratio
 function generateGeometricConstant() {
-    const start = randomInt(2, 10);
-    const ratio = randomInt(2, 5);
-    const length = randomInt(5, 7);
+    const start = randomInt(2, 8);
+    const ratio = randomInt(2, 3); // Smaller ratio to stay within bounds
+    const length = randomInt(5, 6); // Shorter length for geometric
     const series = [];
     
     for (let i = 0; i < length; i++) {
@@ -121,8 +169,8 @@ function generateGeometricConstant() {
 
 // 4. Positional Rules - Powers
 function generatePositionalPowers() {
-    const power = randomInt(2, 4); // squares, cubes, or 4th powers
-    const length = randomInt(5, 7);
+    const power = randomInt(2, 3); // Only squares and cubes to stay within bounds
+    const length = randomInt(5, 6); // Shorter length for powers
     const series = [];
     
     for (let i = 1; i <= length; i++) {
@@ -132,7 +180,7 @@ function generatePositionalPowers() {
     const next1 = Math.pow(length + 1, power);
     const next2 = Math.pow(length + 2, power);
     
-    const powerNames = { 2: 'square', 3: 'cube', 4: '4th power' };
+    const powerNames = { 2: 'square', 3: 'cube' };
     
     return {
         series: series,
@@ -145,8 +193,8 @@ function generatePositionalPowers() {
 // 5. Positional Rules - Powers with Offset
 function generatePositionalPowersOffset() {
     const power = randomInt(2, 3);
-    const offset = randomInt(-5, 5);
-    const length = randomInt(5, 7);
+    const offset = randomInt(0, 10); // Only positive offsets to avoid negatives
+    const length = randomInt(5, 6); // Shorter length
     const series = [];
     
     for (let i = 1; i <= length; i++) {
@@ -157,21 +205,20 @@ function generatePositionalPowersOffset() {
     const next2 = Math.pow(length + 2, power) + offset;
     
     const powerNames = { 2: 'square', 3: 'cube' };
-    const offsetText = offset >= 0 ? `+ ${offset}` : `- ${Math.abs(offset)}`;
     
     return {
         series: series,
         answers: [next1, next2],
-        rule: `The ${powerNames[power]} of the position ${offsetText} (n^${power} ${offsetText})`,
+        rule: `The ${powerNames[power]} of the position + ${offset} (n^${power} + ${offset})`,
         ruleType: 'positional_powers_offset'
     };
 }
 
 // 6. Recursive Rules - Fibonacci-style
 function generateRecursiveFibonacci() {
-    const start1 = randomInt(1, 10);
-    const start2 = randomInt(1, 10);
-    const length = randomInt(5, 7);
+    const start1 = randomInt(1, 5); // Smaller starting numbers
+    const start2 = randomInt(1, 5);
+    const length = randomInt(5, 6); // Shorter length
     const series = [start1, start2];
     
     for (let i = 2; i < length; i++) {
@@ -191,8 +238,8 @@ function generateRecursiveFibonacci() {
 
 // 7. Mixed Operations
 function generateMixedOperations() {
-    const start = randomInt(2, 20);
-    const length = randomInt(5, 7);
+    const start = randomInt(2, 15); // Smaller starting number
+    const length = randomInt(5, 6); // Shorter length
     const series = [start];
     
     // Choose operation type
@@ -231,29 +278,29 @@ function generateMixedOperations() {
 
 // 8. Alternating Operations
 function generateAlternatingOperations() {
-    const start = randomInt(5, 20);
-    const length = randomInt(5, 7);
+    const start = randomInt(5, 15); // Smaller starting number
+    const length = randomInt(5, 6); // Shorter length
     const series = [start];
     
     // Choose alternating pattern
     const pattern = randomInt(1, 2);
     
     if (pattern === 1) {
-        // Add 2, then subtract 3
+        // Add 2, then add 1 (avoiding subtraction to prevent negatives)
         for (let i = 1; i < length; i++) {
             if (i % 2 === 1) {
                 series.push(series[i - 1] + 2);
             } else {
-                series.push(series[i - 1] - 3);
+                series.push(series[i - 1] + 1);
             }
         }
-        const next1 = series[series.length - 1] + (length % 2 === 1 ? 2 : -3);
-        const next2 = next1 + (length % 2 === 0 ? 2 : -3);
+        const next1 = series[series.length - 1] + (length % 2 === 1 ? 2 : 1);
+        const next2 = next1 + (length % 2 === 0 ? 2 : 1);
         
         return {
             series: series,
             answers: [next1, next2],
-            rule: `Add 2, then subtract 3, alternating`,
+            rule: `Add 2, then add 1, alternating`,
             ruleType: 'alternating_operations'
         };
     } else {
