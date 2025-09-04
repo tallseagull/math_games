@@ -12,11 +12,50 @@ h1 {
     margin-bottom: 30px;
 }
 
+.controls-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.dimension-selector {
+    display: inline-block;
+    background-color: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.dimension-selector label {
+    font-weight: bold;
+    color: #444;
+    margin-right: 10px;
+}
+
+.dimension-selector select {
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.dimension-selector select:hover {
+    border-color: #007bff;
+}
+
+.dimension-selector select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
 .puzzle-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -60,6 +99,10 @@ h1 {
 .puzzle-table td.incorrect {
     background-color: #FFB6C1;
 }
+.puzzle-table td.solution-highlight {
+    background-color: #FFD700;
+    border: 2px solid #FFA500;
+}
 
 .product-cell {
     background-color: #e8f4f8;
@@ -69,8 +112,18 @@ h1 {
     font-size: 0.8em;
 }
 
+.product-cell.product-correct {
+    background-color: #d4edda;
+    color: #155724;
+    border: 2px solid #c3e6cb;
+}
+
 .product-cell:hover {
     background-color: #e8f4f8;
+}
+
+.product-cell.product-correct:hover {
+    background-color: #d4edda;
 }
 
 .corner-cell {
@@ -83,53 +136,6 @@ h1 {
     background-color: transparent;
 }
 
-.solution-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.95);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-}
-
-.solution-content {
-    text-align: center;
-    padding: 10px;
-}
-
-.solution-table {
-    border-collapse: collapse;
-    margin: 10px auto;
-}
-
-.solution-table td {
-    border: 1px solid #ccc;
-    width: 25px;
-    height: 25px;
-    text-align: center;
-    font-size: 0.8em;
-    font-weight: bold;
-}
-
-.solution-table td.solution-cell {
-    background-color: #a2e8c2;
-}
-
-.solution-table .product-cell {
-    background-color: #e8f4f8;
-    font-style: italic;
-    color: #0056b3;
-    font-size: 0.7em;
-}
-
-.solution-table .corner-cell {
-    border: none;
-    background-color: transparent;
-}
 
 .button-container {
     display: flex;
@@ -184,6 +190,17 @@ button {
     background-color: #e0a800;
 }
 
+button:disabled {
+    background-color: #6c757d !important;
+    color: #fff !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+}
+
+button:disabled:hover {
+    background-color: #6c757d !important;
+}
+
 .result-message {
     margin-top: 5px;
     padding: 5px;
@@ -224,20 +241,102 @@ button {
     background-color: #138496;
 }
 
-@media (max-width: 1200px) {
-    .puzzle-container {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 900px) {
+/* Responsive grid adjustments */
+@media (max-width: 1000px) {
     .puzzle-container {
         grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .puzzle-container {
         grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 0 10px;
+    }
+    
+    .puzzle-card {
+        padding: 12px;
+    }
+    
+    .controls-container {
+        margin-bottom: 20px;
+    }
+    
+    .dimension-selector {
+        padding: 12px 16px;
+    }
+    
+    .dimension-selector select {
+        font-size: 0.9em;
+        padding: 6px 10px;
     }
 }
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+    
+    .puzzle-container {
+        gap: 10px;
+        padding: 0 5px;
+    }
+    
+    .puzzle-card {
+        padding: 10px;
+    }
+    
+    .puzzle-card h3 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+    
+    .button-container {
+        gap: 3px;
+        margin-top: 8px;
+    }
+    
+    button {
+        padding: 3px 6px;
+        font-size: 0.65em;
+    }
+    
+    .new-boards-btn {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+}
+
+/* Adjust puzzle card size for different board dimensions */
+.puzzle-card[data-dimension="3"] .puzzle-table td {
+    width: 35px;
+    height: 35px;
+    font-size: 1.125em; /* 18px - increased by 2 points */
+}
+
+.puzzle-card[data-dimension="4"] .puzzle-table td {
+    width: 30px;
+    height: 30px;
+    font-size: 1.025em; /* 16.4px - increased by 2 points */
+}
+
+.puzzle-card[data-dimension="5"] .puzzle-table td {
+    width: 25px;
+    height: 25px;
+    font-size: 0.925em; /* 14.8px - increased by 2 points */
+}
+
+.puzzle-card[data-dimension="6"] .puzzle-table td {
+    width: 22px;
+    height: 22px;
+    font-size: 0.825em; /* 13.2px - increased by 2 points */
+}
+
+

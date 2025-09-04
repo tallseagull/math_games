@@ -1,11 +1,34 @@
 // Game parameters
-const PUZZLE_COUNT = 16;
-const DIMENSIONS = 4;
+const PUZZLE_COUNT = 15;
+let DIMENSIONS = 4;
 const NUMBER_RANGE = [2, 9]; // Inclusive range
-const SELECTION_COUNT_RANGE = [2, 3]; // Inclusive range
+let SELECTION_COUNT_RANGE = [2, 3]; // Inclusive range
 
 // Store puzzle data
 let puzzleData = {};
+
+// Get selection count range based on dimensions
+function getSelectionCountRange(dimensions) {
+    switch(dimensions) {
+        case 3:
+            return [2, 2]; // Select exactly 2 numbers
+        case 4:
+        case 5:
+            return [2, 3]; // Select 2-3 numbers
+        case 6:
+            return [3, 3]; // Select exactly 3 numbers
+        default:
+            return [2, 3];
+    }
+}
+
+// Change dimension and regenerate puzzles
+function changeDimension() {
+    const select = document.getElementById('dimensionSelect');
+    DIMENSIONS = parseInt(select.value);
+    SELECTION_COUNT_RANGE = getSelectionCountRange(DIMENSIONS);
+    generateAllPuzzles();
+}
 
 // Generate random integer in range [min, max] inclusive
 function randomInt(min, max) {
@@ -207,28 +230,9 @@ function createPuzzleHTML(puzzle, puzzleId) {
     tableHTML += '</tr>';
     tableHTML += '</table>';
 
-    // Create solution table
-    let solutionTableHTML = '<table class="solution-table">';
-    for (let row = 0; row < DIMENSIONS; row++) {
-        solutionTableHTML += '<tr>';
-        for (let col = 0; col < DIMENSIONS; col++) {
-            const isSolutionCell = puzzle.rowSelections[row].includes(col);
-            const className = isSolutionCell ? ' class="solution-cell"' : '';
-            solutionTableHTML += `<td${className}>${puzzle.grid[row][col]}</td>`;
-        }
-        solutionTableHTML += `<td class="product-cell">${puzzle.rowProducts[row]}</td>`;
-        solutionTableHTML += '</tr>';
-    }
-    solutionTableHTML += '<tr>';
-    for (let col = 0; col < DIMENSIONS; col++) {
-        solutionTableHTML += `<td class="product-cell">${puzzle.colProducts[col]}</td>`;
-    }
-    solutionTableHTML += '<td class="corner-cell"></td>';
-    solutionTableHTML += '</tr>';
-    solutionTableHTML += '</table>';
 
     return `
-        <div class="puzzle-card" id="puzzle-${puzzleId}">
+        <div class="puzzle-card" id="puzzle-${puzzleId}" data-dimension="${DIMENSIONS}">
             <h3>Puzzle ${puzzleId}</h3>
             ${tableHTML}
             <div class="button-container">
@@ -237,13 +241,6 @@ function createPuzzleHTML(puzzle, puzzleId) {
                 <button class="reset-btn" onclick="resetPuzzle(${puzzleId})">Reset</button>
             </div>
             <div id="result-${puzzleId}"></div>
-            <div class="solution-overlay" id="solution-overlay-${puzzleId}">
-                <div class="solution-content">
-                    <h4>Solution for Puzzle ${puzzleId}</h4>
-                    ${solutionTableHTML}
-                    <button class="close-solution-btn" onclick="closeSolution(${puzzleId})">Close</button>
-                </div>
-            </div>
         </div>
     `;
 }
@@ -283,11 +280,70 @@ function addCellClickListeners() {
     }
 }
 
+// Update product highlights based on current selection
+function updateProductHighlights(puzzleId) {
+    const puzzle = puzzleData[puzzleId];
+    const cells = document.querySelectorAll(`#puzzle-${puzzleId} .puzzle-table td`);
+    
+    // Clear all product highlights
+    cells.forEach(cell => {
+        if (cell.classList.contains('product-cell')) {
+            cell.classList.remove('product-correct');
+        }
+    });
+    
+    // Check row products
+    for (let row = 0; row < DIMENSIONS; row++) {
+        let selectedProduct = 1;
+        let hasSelection = false;
+        
+        for (let col = 0; col < DIMENSIONS; col++) {
+            const cell = document.querySelector(`#puzzle-${puzzleId} .puzzle-table tr:nth-child(${row + 1}) td:nth-child(${col + 1})`);
+            if (cell && cell.classList.contains('selected')) {
+                selectedProduct *= puzzle.grid[row][col];
+                hasSelection = true;
+            }
+        }
+        
+        // If we have selections and the product matches, highlight the row product
+        if (hasSelection && selectedProduct === puzzle.rowProducts[row]) {
+            const rowProductCell = document.querySelector(`#puzzle-${puzzleId} .puzzle-table tr:nth-child(${row + 1}) td:nth-child(${DIMENSIONS + 1})`);
+            if (rowProductCell) {
+                rowProductCell.classList.add('product-correct');
+            }
+        }
+    }
+    
+    // Check column products
+    for (let col = 0; col < DIMENSIONS; col++) {
+        let selectedProduct = 1;
+        let hasSelection = false;
+        
+        for (let row = 0; row < DIMENSIONS; row++) {
+            const cell = document.querySelector(`#puzzle-${puzzleId} .puzzle-table tr:nth-child(${row + 1}) td:nth-child(${col + 1})`);
+            if (cell && cell.classList.contains('selected')) {
+                selectedProduct *= puzzle.grid[row][col];
+                hasSelection = true;
+            }
+        }
+        
+        // If we have selections and the product matches, highlight the column product
+        if (hasSelection && selectedProduct === puzzle.colProducts[col]) {
+            const colProductCell = document.querySelector(`#puzzle-${puzzleId} .puzzle-table tr:nth-child(${DIMENSIONS + 1}) td:nth-child(${col + 1})`);
+            if (colProductCell) {
+                colProductCell.classList.add('product-correct');
+            }
+        }
+    }
+}
+
 // Toggle cell selection
 function toggleCell(puzzleId, row, col) {
     const cell = document.querySelector(`#puzzle-${puzzleId} .puzzle-table tr:nth-child(${row + 1}) td:nth-child(${col + 1})`);
     if (cell && !cell.classList.contains('product-cell') && !cell.classList.contains('corner-cell')) {
         cell.classList.toggle('selected');
+        // Update product highlights after selection change
+        updateProductHighlights(puzzleId);
     }
 }
 
@@ -346,22 +402,73 @@ function checkSolution(puzzleId) {
 
 // Show solution
 function showSolution(puzzleId) {
-    const overlay = document.getElementById(`solution-overlay-${puzzleId}`);
-    overlay.style.display = 'flex';
+    const puzzle = puzzleData[puzzleId];
+    const cells = document.querySelectorAll(`#puzzle-${puzzleId} .puzzle-table td`);
+    const showBtn = document.querySelector(`#puzzle-${puzzleId} .show-solution-btn`);
+    const checkBtn = document.querySelector(`#puzzle-${puzzleId} .check-btn`);
+    const resetBtn = document.querySelector(`#puzzle-${puzzleId} .reset-btn`);
+    
+    // Clear any existing highlights
+    cells.forEach(cell => {
+        cell.classList.remove('solution-highlight');
+    });
+    
+    // Highlight solution cells
+    cells.forEach((cell, index) => {
+        const row = Math.floor(index / (DIMENSIONS + 1));
+        const col = index % (DIMENSIONS + 1);
+        
+        if (row < DIMENSIONS && col < DIMENSIONS) {
+            const isSolutionCell = puzzle.rowSelections[row].includes(col);
+            if (isSolutionCell) {
+                cell.classList.add('solution-highlight');
+            }
+        }
+    });
+    
+    // Update button states
+    showBtn.textContent = 'Hide';
+    showBtn.onclick = () => hideSolution(puzzleId);
+    checkBtn.disabled = true;
+    resetBtn.disabled = true;
 }
 
-// Close solution
-function closeSolution(puzzleId) {
-    const overlay = document.getElementById(`solution-overlay-${puzzleId}`);
-    overlay.style.display = 'none';
+// Hide solution
+function hideSolution(puzzleId) {
+    const cells = document.querySelectorAll(`#puzzle-${puzzleId} .puzzle-table td`);
+    const showBtn = document.querySelector(`#puzzle-${puzzleId} .show-solution-btn`);
+    const checkBtn = document.querySelector(`#puzzle-${puzzleId} .check-btn`);
+    const resetBtn = document.querySelector(`#puzzle-${puzzleId} .reset-btn`);
+    
+    // Clear solution highlights
+    cells.forEach(cell => {
+        cell.classList.remove('solution-highlight');
+    });
+    
+    // Update button states
+    showBtn.textContent = 'Show';
+    showBtn.onclick = () => showSolution(puzzleId);
+    checkBtn.disabled = false;
+    resetBtn.disabled = false;
 }
 
 // Reset puzzle
 function resetPuzzle(puzzleId) {
     const cells = document.querySelectorAll(`#puzzle-${puzzleId} .puzzle-table td`);
+    const showBtn = document.querySelector(`#puzzle-${puzzleId} .show-solution-btn`);
+    const checkBtn = document.querySelector(`#puzzle-${puzzleId} .check-btn`);
+    const resetBtn = document.querySelector(`#puzzle-${puzzleId} .reset-btn`);
+    
     cells.forEach(cell => {
-        cell.classList.remove('selected', 'correct', 'incorrect');
+        cell.classList.remove('selected', 'correct', 'incorrect', 'solution-highlight', 'product-correct');
     });
+    
+    // Reset button states
+    showBtn.textContent = 'Show';
+    showBtn.onclick = () => showSolution(puzzleId);
+    checkBtn.disabled = false;
+    resetBtn.disabled = false;
+    
     const resultDiv = document.getElementById(`result-${puzzleId}`);
     resultDiv.innerHTML = '';
 }
