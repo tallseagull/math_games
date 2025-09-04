@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Product Puzzles - JavaScript Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #444;
+            margin-bottom: 30px;
+        }
+        .puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .puzzle-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .puzzle-table {
+            border-collapse: collapse;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .puzzle-table td {
+            border: 1px solid #ccc;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .puzzle-table td:hover {
+            background-color: #f0f8ff;
+        }
+        .puzzle-table td.selected {
+            background-color: #a2e8c2;
+        }
+        .puzzle-table td.correct {
+            background-color: #90EE90;
+        }
+        .puzzle-table td.incorrect {
+            background-color: #FFB6C1;
+        }
+        .product-cell {
+            background-color: #e8f4f8;
+            font-style: italic;
+            color: #0056b3;
+            cursor: default;
+            font-size: 0.8em;
+        }
+        .product-cell:hover {
+            background-color: #e8f4f8;
+        }
+        .corner-cell {
+            border: none;
+            background-color: transparent;
+            cursor: default;
+        }
+        .corner-cell:hover {
+            background-color: transparent;
+        }
+        .solution-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+        .solution-content {
+            text-align: center;
+            padding: 10px;
+        }
+        .solution-table {
+            border-collapse: collapse;
+            margin: 10px auto;
+        }
+        .solution-table td {
+            border: 1px solid #ccc;
+            width: 25px;
+            height: 25px;
+            text-align: center;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .solution-table td.solution-cell {
+            background-color: #a2e8c2;
+        }
+        .solution-table .product-cell {
+            background-color: #e8f4f8;
+            font-style: italic;
+            color: #0056b3;
+            font-size: 0.7em;
+        }
+        .solution-table .corner-cell {
+            border: none;
+            background-color: transparent;
+        }
+        .button-container {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 4px 8px;
+            font-size: 0.7em;
+            cursor: pointer;
+            border: none;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+        .check-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .check-btn:hover {
+            background-color: #218838;
+        }
+        .show-solution-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        .show-solution-btn:hover {
+            background-color: #0056b3;
+        }
+        .close-solution-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+        .close-solution-btn:hover {
+            background-color: #545b62;
+        }
+        .reset-btn {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .reset-btn:hover {
+            background-color: #e0a800;
+        }
+        .result-message {
+            margin-top: 5px;
+            padding: 5px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.7em;
+        }
+        .result-correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .result-incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .new-boards-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .new-boards-btn {
+            background-color: #17a2b8;
+            color: white;
+            padding: 12px 24px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .new-boards-btn:hover {
+            background-color: #138496;
+        }
+        @media (max-width: 1200px) {
+            .puzzle-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 900px) {
+            .puzzle-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .puzzle-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Number Product Puzzles</h1>
+    <div class="puzzle-container" id="puzzleContainer">
+        <!-- Puzzles will be generated here -->
+    </div>
+    <div class="new-boards-container">
+        <button class="new-boards-btn" onclick="generateNewBoards()">New Boards</button>
+    </div>
+
+    <script>
+        // Game parameters
+        const PUZZLE_COUNT = 16;
+        const DIMENSIONS = 4;
+        const NUMBER_RANGE = [2, 9]; // Inclusive range
+        const SELECTION_COUNT_RANGE = [2, 3]; // Inclusive range
+
+        // Store puzzle data
+        let puzzleData = {};
+
+        // Generate random integer in range [min, max] inclusive
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Generate a single puzzle
+        function generatePuzzle() {
+            // 1. Create the main grid with random numbers
+            const grid = [];
+            for (let row = 0; row < DIMENSIONS; row++) {
+                grid[row] = [];
+                for (let col = 0; col < DIMENSIONS; col++) {
+                    grid[row][col] = randomInt(NUMBER_RANGE[0], NUMBER_RANGE[1]);
+                }
+            }
+
+            // 2. Generate a valid selection that satisfies both row and column constraints
+            let selectionMatrix = [];
+            let maxAttempts = 1000;
+            let foundValidSelection = false;
+            
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                // Create a selection matrix (true = selected, false = not selected)
+                selectionMatrix = Array(DIMENSIONS).fill().map(() => Array(DIMENSIONS).fill(false));
+                
+                // Try to fill the selection matrix
+                let valid = true;
+                for (let row = 0; row < DIMENSIONS; row++) {
+                    // Count how many are already selected in this row
+                    let currentSelected = selectionMatrix[row].filter(cell => cell).length;
+                    let minNeeded = SELECTION_COUNT_RANGE[0] - currentSelected;
+                    let maxAllowed = SELECTION_COUNT_RANGE[1] - currentSelected;
+                    
+                    if (minNeeded > 0) {
+                        // We need to select at least minNeeded more cells in this row
+                        let availableCols = [];
+                        for (let col = 0; col < DIMENSIONS; col++) {
+                            if (!selectionMatrix[row][col]) {
+                                availableCols.push(col);
+                            }
+                        }
+                        if (availableCols.length >= minNeeded) {
+                            // Select minNeeded cells
+                            let colsToSelect = [];
+                            let availableColsCopy = [...availableCols];
+                            for (let i = 0; i < minNeeded; i++) {
+                                let randomIndex = Math.floor(Math.random() * availableColsCopy.length);
+                                colsToSelect.push(availableColsCopy[randomIndex]);
+                                availableColsCopy.splice(randomIndex, 1);
+                            }
+                            for (let col of colsToSelect) {
+                                selectionMatrix[row][col] = true;
+                            }
+                        } else {
+                            // Not enough available cells, try again
+                            valid = false;
+                            break;
+                        }
+                    } else if (maxAllowed > 0) {
+                        // We can select up to maxAllowed more cells
+                        let availableCols = [];
+                        for (let col = 0; col < DIMENSIONS; col++) {
+                            if (!selectionMatrix[row][col]) {
+                                availableCols.push(col);
+                            }
+                        }
+                        if (availableCols.length > 0) {
+                            let numToSelect = randomInt(0, Math.min(maxAllowed, availableCols.length));
+                            if (numToSelect > 0) {
+                                let colsToSelect = [];
+                                let availableColsCopy = [...availableCols];
+                                for (let i = 0; i < numToSelect; i++) {
+                                    let randomIndex = Math.floor(Math.random() * availableColsCopy.length);
+                                    colsToSelect.push(availableColsCopy[randomIndex]);
+                                    availableColsCopy.splice(randomIndex, 1);
+                                }
+                                for (let col of colsToSelect) {
+                                    selectionMatrix[row][col] = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (valid) {
+                    // Check if all columns also satisfy constraints
+                    for (let col = 0; col < DIMENSIONS; col++) {
+                        let colCount = 0;
+                        for (let row = 0; row < DIMENSIONS; row++) {
+                            if (selectionMatrix[row][col]) colCount++;
+                        }
+                        if (colCount < SELECTION_COUNT_RANGE[0] || colCount > SELECTION_COUNT_RANGE[1]) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    
+                    if (valid) {
+                        // We found a valid selection
+                        foundValidSelection = true;
+                        break;
+                    }
+                }
+            }
+            
+            // If we couldn't find a valid selection, create a simple one
+            if (!foundValidSelection) {
+                selectionMatrix = Array(DIMENSIONS).fill().map(() => Array(DIMENSIONS).fill(false));
+                for (let row = 0; row < DIMENSIONS; row++) {
+                    // Select exactly SELECTION_COUNT_RANGE[0] cells in each row
+                    let colsToSelect = [];
+                    let availableCols = Array.from({length: DIMENSIONS}, (_, i) => i);
+                    for (let i = 0; i < SELECTION_COUNT_RANGE[0]; i++) {
+                        let randomIndex = Math.floor(Math.random() * availableCols.length);
+                        colsToSelect.push(availableCols[randomIndex]);
+                        availableCols.splice(randomIndex, 1);
+                    }
+                    for (let col of colsToSelect) {
+                        selectionMatrix[row][col] = true;
+                    }
+                }
+            }
+
+            // 3. Convert selection matrix to row and column selections
+            const rowSelections = [];
+            for (let row = 0; row < DIMENSIONS; row++) {
+                const selectedCols = [];
+                for (let col = 0; col < DIMENSIONS; col++) {
+                    if (selectionMatrix[row][col]) {
+                        selectedCols.push(col);
+                    }
+                }
+                rowSelections.push(selectedCols.sort());
+            }
+
+            const colSelections = [];
+            for (let col = 0; col < DIMENSIONS; col++) {
+                const selectedRows = [];
+                for (let row = 0; row < DIMENSIONS; row++) {
+                    if (selectionMatrix[row][col]) {
+                        selectedRows.push(row);
+                    }
+                }
+                colSelections.push(selectedRows.sort());
+            }
+
+            // 4. Calculate row products based on selected numbers
+            const rowProducts = [];
+            for (let i = 0; i < DIMENSIONS; i++) {
+                let product = 1;
+                for (let col of rowSelections[i]) {
+                    product *= grid[i][col];
+                }
+                rowProducts.push(product);
+            }
+
+            // 5. Calculate column products based on the same selected numbers
+            const colProducts = [];
+            for (let i = 0; i < DIMENSIONS; i++) {
+                let product = 1;
+                for (let row of colSelections[i]) {
+                    product *= grid[row][i];
+                }
+                colProducts.push(product);
+            }
+
+            return {
+                grid: grid,
+                rowProducts: rowProducts,
+                colProducts: colProducts,
+                rowSelections: rowSelections,
+                colSelections: colSelections
+            };
+        }
+
+        // Generate HTML for a single puzzle
+        function createPuzzleHTML(puzzle, puzzleId) {
+            // Create main puzzle table
+            let tableHTML = '<table class="puzzle-table">';
+            
+            // Table body with numbers
+            for (let row = 0; row < DIMENSIONS; row++) {
+                tableHTML += '<tr>';
+                for (let col = 0; col < DIMENSIONS; col++) {
+                    tableHTML += `<td>${puzzle.grid[row][col]}</td>`;
+                }
+                // Add row product
+                tableHTML += `<td class="product-cell">${puzzle.rowProducts[row]}</td>`;
+                tableHTML += '</tr>';
+            }
+            
+            // Footer row for column products
+            tableHTML += '<tr>';
+            for (let col = 0; col < DIMENSIONS; col++) {
+                tableHTML += `<td class="product-cell">${puzzle.colProducts[col]}</td>`;
+            }
+            tableHTML += '<td class="corner-cell"></td>';
+            tableHTML += '</tr>';
+            tableHTML += '</table>';
+
+            // Create solution table
+            let solutionTableHTML = '<table class="solution-table">';
+            for (let row = 0; row < DIMENSIONS; row++) {
+                solutionTableHTML += '<tr>';
+                for (let col = 0; col < DIMENSIONS; col++) {
+                    const isSolutionCell = puzzle.rowSelections[row].includes(col);
+                    const className = isSolutionCell ? ' class="solution-cell"' : '';
+                    solutionTableHTML += `<td${className}>${puzzle.grid[row][col]}</td>`;
+                }
+                solutionTableHTML += `<td class="product-cell">${puzzle.rowProducts[row]}</td>`;
+                solutionTableHTML += '</tr>';
+            }
+            solutionTableHTML += '<tr>';
+            for (let col = 0; col < DIMENSIONS; col++) {
+                solutionTableHTML += `<td class="product-cell">${puzzle.colProducts[col]}</td>`;
+            }
+            solutionTableHTML += '<td class="corner-cell"></td>';
+            solutionTableHTML += '</tr>';
+            solutionTableHTML += '</table>';
+
+            return `
+                <div class="puzzle-card" id="puzzle-${puzzleId}">
+                    <h3>Puzzle ${puzzleId}</h3>
+                    ${tableHTML}
+                    <div class="button-container">
+                        <button class="check-btn" onclick="checkSolution(${puzzleId})">Check</button>
+                        <button class="show-solution-btn" onclick="showSolution(${puzzleId})">Show</button>
+                        <button class="reset-btn" onclick="resetPuzzle(${puzzleId})">Reset</button>
+                    </div>
+                    <div id="result-${puzzleId}"></div>
+                    <div class="solution-overlay" id="solution-overlay-${puzzleId}">
+                        <div class="solution-content">
+                            <h4>Solution for Puzzle ${puzzleId}</h4>
+                            ${solutionTableHTML}
+                            <button class="close-solution-btn" onclick="closeSolution(${puzzleId})">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Generate all puzzles and display them
+        function generateAllPuzzles() {
+            puzzleData = {};
+            let puzzleHTML = '';
+            
+            for (let i = 1; i <= PUZZLE_COUNT; i++) {
+                const puzzle = generatePuzzle();
+                puzzleData[i] = puzzle;
+                puzzleHTML += createPuzzleHTML(puzzle, i);
+            }
+            
+            document.getElementById('puzzleContainer').innerHTML = puzzleHTML;
+            
+            // Add click event listeners to puzzle cells
+            addCellClickListeners();
+        }
+
+        // Add click event listeners to all puzzle cells
+        function addCellClickListeners() {
+            for (let puzzleId = 1; puzzleId <= PUZZLE_COUNT; puzzleId++) {
+                const table = document.querySelector(`#puzzle-${puzzleId} .puzzle-table`);
+                if (table) {
+                    const cells = table.querySelectorAll('td');
+                    cells.forEach((cell, index) => {
+                        const row = Math.floor(index / (DIMENSIONS + 1));
+                        const col = index % (DIMENSIONS + 1);
+                        
+                        if (row < DIMENSIONS && col < DIMENSIONS) {
+                            cell.addEventListener('click', () => toggleCell(puzzleId, row, col));
+                        }
+                    });
+                }
+            }
+        }
+
+        // Toggle cell selection
+        function toggleCell(puzzleId, row, col) {
+            const cell = document.querySelector(`#puzzle-${puzzleId} .puzzle-table tr:nth-child(${row + 1}) td:nth-child(${col + 1})`);
+            if (cell && !cell.classList.contains('product-cell') && !cell.classList.contains('corner-cell')) {
+                cell.classList.toggle('selected');
+            }
+        }
+
+        // Check solution
+        function checkSolution(puzzleId) {
+            const puzzle = puzzleData[puzzleId];
+            const selectedCells = document.querySelectorAll(`#puzzle-${puzzleId} .puzzle-table td.selected`);
+            const resultDiv = document.getElementById(`result-${puzzleId}`);
+            
+            // Get selected positions
+            const selectedPositions = [];
+            selectedCells.forEach(cell => {
+                const row = cell.parentElement.rowIndex;
+                const col = cell.cellIndex;
+                if (row < DIMENSIONS && col < DIMENSIONS) {
+                    selectedPositions.push([row, col]);
+                }
+            });
+
+            // Build the correct selection set from row selections
+            const correctSelections = [];
+            for (let row = 0; row < DIMENSIONS; row++) {
+                for (let col of puzzle.rowSelections[row]) {
+                    correctSelections.push([row, col]);
+                }
+            }
+
+            // Check if all correct cells are selected and no incorrect ones
+            const isCorrect = correctSelections.every(pos => 
+                selectedPositions.some(sel => sel[0] === pos[0] && sel[1] === pos[1])
+            ) && selectedPositions.every(pos => 
+                correctSelections.some(correct => correct[0] === pos[0] && correct[1] === pos[1])
+            );
+
+            // Update cell colors
+            const allCells = document.querySelectorAll(`#puzzle-${puzzleId} .puzzle-table td`);
+            allCells.forEach(cell => {
+                cell.classList.remove('correct', 'incorrect');
+                if (cell.classList.contains('selected')) {
+                    const row = cell.parentElement.rowIndex;
+                    const col = cell.cellIndex;
+                    if (row < DIMENSIONS && col < DIMENSIONS) {
+                        const isCorrectCell = correctSelections.some(pos => pos[0] === row && pos[1] === col);
+                        cell.classList.add(isCorrectCell ? 'correct' : 'incorrect');
+                    }
+                }
+            });
+
+            // Show result message
+            if (isCorrect) {
+                resultDiv.innerHTML = '<div class="result-message result-correct">✓ Correct!</div>';
+            } else {
+                resultDiv.innerHTML = '<div class="result-message result-incorrect">✗ Try again!</div>';
+            }
+        }
+
+        // Show solution
+        function showSolution(puzzleId) {
+            const overlay = document.getElementById(`solution-overlay-${puzzleId}`);
+            overlay.style.display = 'flex';
+        }
+
+        // Close solution
+        function closeSolution(puzzleId) {
+            const overlay = document.getElementById(`solution-overlay-${puzzleId}`);
+            overlay.style.display = 'none';
+        }
+
+        // Reset puzzle
+        function resetPuzzle(puzzleId) {
+            const cells = document.querySelectorAll(`#puzzle-${puzzleId} .puzzle-table td`);
+            cells.forEach(cell => {
+                cell.classList.remove('selected', 'correct', 'incorrect');
+            });
+            const resultDiv = document.getElementById(`result-${puzzleId}`);
+            resultDiv.innerHTML = '';
+        }
+
+        // Generate new boards
+        function generateNewBoards() {
+            generateAllPuzzles();
+        }
+
+        // Initialize the game when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            generateAllPuzzles();
+        });
+    </script>
+</body>
+</html>
