@@ -1,0 +1,26 @@
+{
+  "words": [
+    {"word": "girl", "weight": 1},
+    {"word": "cat", "weight": 1},
+    {"word": "boy", "weight": 1},
+    {"word": "mom", "weight": 1},
+    {"word": "dog", "weight": 1},
+    {"word": "black", "weight": 1},
+    {"word": "white", "weight": 1},
+    {"word": "blue", "weight": 1},
+    {"word": "red", "weight": 1},
+    {"word": "five", "weight": 1},
+    {"word": "one", "weight": 1},
+    {"word": "four", "weight": 1},
+    {"word": "three", "weight": 1},
+    {"word": "six", "weight": 1},
+    {"word": "two", "weight": 1},
+    {"word": "zero", "weight": 1},
+    {"word": "seven", "weight": 1},
+    {"word": "eight", "weight": 1},
+    {"word": "eleven", "weight": 1},
+    {"word": "ten", "weight": 1},
+    {"word": "nine", "weight": 1},
+    {"word": "twelve", "weight": 1}
+  ]
+}

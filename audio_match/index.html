@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Match Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header with play button and score -->
+        <div class="header">
+            <button id="playButton" class="play-button">🔊</button>
+            <div class="score">⭐ <span id="score">0</span></div>
+        </div>
+
+        <!-- Game area -->
+        <div class="game-area">
+            <!-- Image options grid -->
+            <div class="image-grid" id="imageGrid">
+                <!-- Images will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <!-- Trophy splash screen (hidden by default) -->
+        <div class="trophy-screen" id="trophyScreen">
+            <div class="trophy-content">
+                <div class="trophy">🏆</div>
+                <div class="celebration">🎉</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
