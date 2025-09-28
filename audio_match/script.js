@@ -9,7 +9,7 @@ class AudioMatchGame {
         this.gameActive = true;
         this.recentWords = []; // Track last 10 words shown
         this.solvedWords = new Set(); // Track words successfully solved
-        this.audioEnabled = false; // Track if audio is enabled by user interaction
+        this.audioEnabled = true; // Start with audio enabled
         
         this.initializeElements();
         this.loadWords();
@@ -21,10 +21,10 @@ class AudioMatchGame {
         this.imageGrid = document.getElementById('imageGrid');
         this.trophyScreen = document.getElementById('trophyScreen');
         
-        this.playButton.addEventListener('click', () => this.enableAudioAndPlay());
+        this.playButton.addEventListener('click', () => this.playCurrentAudio());
         
-        // Add click listener to the entire game area to enable audio
-        this.imageGrid.addEventListener('click', () => this.enableAudio());
+        // Update play button appearance based on audio state
+        this.updatePlayButtonAppearance();
     }
 
     async loadWords() {
@@ -61,10 +61,8 @@ class AudioMatchGame {
         
         this.loadImages();
         
-        // Only play audio if it's been enabled by user interaction
-        if (this.audioEnabled) {
-            this.playCurrentAudio();
-        }
+        // Play audio automatically
+        this.playCurrentAudio();
     }
 
     getRandomWord() {
@@ -162,22 +160,17 @@ class AudioMatchGame {
         }
     }
 
-    enableAudio() {
-        if (!this.audioEnabled) {
-            this.audioEnabled = true;
-            // Play the current audio once enabled
-            this.playCurrentAudio();
-        }
+    updatePlayButtonAppearance() {
+        this.playButton.textContent = '🔊';
+        this.playButton.style.opacity = '1';
     }
 
-    enableAudioAndPlay() {
-        this.enableAudio();
-        this.playCurrentAudio();
+    showAudioPrompt() {
+        // Add a subtle visual prompt to click the play button
+        this.playButton.title = 'Click to enable audio';
     }
 
     playCurrentAudio() {
-        if (!this.audioEnabled) return;
-        
         if (this.currentAudio) {
             this.currentAudio.pause();
             this.currentAudio.currentTime = 0;
@@ -186,6 +179,8 @@ class AudioMatchGame {
         this.currentAudio = new Audio(`static/audio/${this.currentWord}.mp3`);
         this.currentAudio.play().catch(error => {
             console.error('Error playing audio:', error);
+            // If autoplay fails, show visual prompt
+            this.showAudioPrompt();
         });
     }
 
@@ -218,9 +213,7 @@ class AudioMatchGame {
                 // Show another try
                 setTimeout(() => {
                     this.resetImageStates();
-                    if (this.audioEnabled) {
-                        this.playCurrentAudio();
-                    }
+                    this.playCurrentAudio();
                 }, 1500);
             } else {
                 // Show correct answer
@@ -246,10 +239,8 @@ class AudioMatchGame {
             }
         });
         
-        // Play audio again if enabled
-        if (this.audioEnabled) {
-            this.playCurrentAudio();
-        }
+        // Play audio again
+        this.playCurrentAudio();
         
         // Start new round after showing correct answer
         setTimeout(() => {
