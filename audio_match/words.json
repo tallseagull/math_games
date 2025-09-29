@@ -21,6 +21,18 @@
     {"word": "eleven", "weight": 1},
     {"word": "ten", "weight": 1},
     {"word": "nine", "weight": 1},
-    {"word": "twelve", "weight": 1}
+    {"word": "twelve", "weight": 1},
+    {"word": "apple", "weight": 1},
+    {"word": "man", "weight": 1},
+    {"word": "green", "weight": 1},
+    {"word": "yellow", "weight": 1},
+    {"word": "orange", "weight": 1},
+    {"word": "woman", "weight": 1},
+    {"word": "baby", "weight": 1},
+    {"word": "big", "weight": 1},
+    {"word": "small", "weight": 1},
+    {"word": "box", "weight": 1},
+    {"word": "book", "weight": 1},
+    {"word": "bag", "weight": 1}
   ]
 }
