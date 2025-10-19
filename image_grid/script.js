@@ -47,7 +47,7 @@ class ImageGridGame {
             imageTile.className = 'image-tile';
             
             const img = document.createElement('img');
-            img.src = `static/images/${imageName}.jpg`;
+            img.src = `../shared/static/images/${imageName}.jpg`;
             img.alt = imageName;
             img.onerror = () => {
                 // If image fails to load, show a placeholder

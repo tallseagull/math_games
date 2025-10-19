@@ -1,6 +1,8 @@
 class AudioMatchGame {
     constructor() {
         this.words = [];
+        this.allCategories = {}; // Store all categories from JSON
+        this.currentCategory = null; // Currently selected category
         this.currentWord = '';
         this.currentAudio = null;
         this.score = 0;
@@ -12,7 +14,7 @@ class AudioMatchGame {
         this.audioEnabled = true; // Start with audio enabled
         
         this.initializeElements();
-        this.loadWords();
+        this.loadCategories();
     }
 
     initializeElements() {
@@ -20,31 +22,114 @@ class AudioMatchGame {
         this.scoreElement = document.getElementById('score');
         this.imageGrid = document.getElementById('imageGrid');
         this.trophyScreen = document.getElementById('trophyScreen');
+        this.categorySelection = document.getElementById('categorySelection');
+        this.categoryGrid = document.getElementById('categoryGrid');
+        this.gameContainer = document.getElementById('gameContainer');
+        this.changeCategoryButton = document.getElementById('changeCategoryButton');
         
         this.playButton.addEventListener('click', () => this.playCurrentAudio());
+        this.changeCategoryButton.addEventListener('click', () => this.showCategorySelection());
         
         // Update play button appearance based on audio state
         this.updatePlayButtonAppearance();
     }
 
-    async loadWords() {
+    async loadCategories() {
         try {
             const response = await fetch('words.json');
             const data = await response.json();
-            this.words = data.words;
-            this.startNewRound();
+            this.allCategories = data;
+            
+            // Check if there's a saved category in localStorage
+            const savedCategory = localStorage.getItem('audioMatchCategory');
+            if (savedCategory && this.allCategories[savedCategory]) {
+                this.selectCategory(savedCategory);
+            } else {
+                // Show category selection screen
+                this.showCategorySelection();
+            }
         } catch (error) {
-            console.error('Error loading words:', error);
+            console.error('Error loading categories:', error);
             // Fallback words if JSON fails to load
-            this.words = [
-                {word: 'mom', weight: 1},
-                {word: 'cat', weight: 1},
-                {word: 'dog', weight: 1},
-                {word: 'car', weight: 1},
-                {word: 'ball', weight: 1}
-            ];
-            this.startNewRound();
+            this.allCategories = {
+                'basic': [
+                    {word: 'mom', weight: 1},
+                    {word: 'cat', weight: 1},
+                    {word: 'dog', weight: 1}
+                ]
+            };
+            this.showCategorySelection();
         }
+    }
+
+    showCategorySelection() {
+        this.categorySelection.style.display = 'flex';
+        this.gameContainer.style.display = 'none';
+        this.gameActive = false;
+        
+        // Clear and populate category grid
+        this.categoryGrid.innerHTML = '';
+        
+        // Category icons mapping
+        const categoryIcons = {
+            'all': '🌈',
+            'numbers': '🔢',
+            'colors': '🎨',
+            'people': '👥',
+            'animals': '🐾',
+            'objects': '📦',
+            'adjectives': '📏',
+            'body': '👃'
+        };
+        
+        Object.keys(this.allCategories).forEach(categoryKey => {
+            const categoryOption = document.createElement('div');
+            categoryOption.className = 'category-option';
+            
+            const icon = document.createElement('div');
+            icon.className = 'category-icon';
+            icon.textContent = categoryIcons[categoryKey] || '📚';
+            
+            const name = document.createElement('div');
+            name.className = 'category-name';
+            name.textContent = categoryKey;
+            
+            const count = document.createElement('div');
+            count.className = 'category-count';
+            count.textContent = `${this.allCategories[categoryKey].length} words`;
+            
+            categoryOption.appendChild(icon);
+            categoryOption.appendChild(name);
+            categoryOption.appendChild(count);
+            
+            categoryOption.addEventListener('click', () => {
+                this.selectCategory(categoryKey);
+            });
+            
+            this.categoryGrid.appendChild(categoryOption);
+        });
+    }
+
+    selectCategory(categoryKey) {
+        this.currentCategory = categoryKey;
+        this.words = this.allCategories[categoryKey];
+        
+        // Save selection to localStorage
+        localStorage.setItem('audioMatchCategory', categoryKey);
+        
+        // Hide category selection and show game
+        this.categorySelection.style.display = 'none';
+        this.gameContainer.style.display = 'flex';
+        this.gameActive = true;
+        
+        // Reset game state
+        this.score = 0;
+        this.updateScore();
+        this.recentWords = [];
+        this.solvedWords.clear();
+        
+        // Start the game
+        this.startNewRound();
     }
 
     startNewRound() {
@@ -126,7 +211,7 @@ class AudioMatchGame {
             imageOption.dataset.word = word;
             
             const img = document.createElement('img');
-            img.src = `static/images/${word}.jpg`;
+            img.src = `../shared/static/images/${word}.jpg`;
             img.alt = word;
             img.onerror = () => {
                 // If image fails to load, show a placeholder
@@ -176,7 +261,7 @@ class AudioMatchGame {
             this.currentAudio.currentTime = 0;
         }
         
-        this.currentAudio = new Audio(`static/audio/${this.currentWord}.mp3`);
+        this.currentAudio = new Audio(`../shared/static/audio/${this.currentWord}.mp3`);
         this.currentAudio.play().catch(error => {
             console.error('Error playing audio:', error);
             // If autoplay fails, show visual prompt
