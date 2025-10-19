@@ -7,11 +7,22 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="game-container">
+    <!-- Category Selection Screen -->
+    <div class="category-selection" id="categorySelection">
+        <div class="category-content">
+            <h1 class="category-title">Choose Your Category</h1>
+            <div class="category-grid" id="categoryGrid">
+                <!-- Categories will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <div class="game-container" id="gameContainer" style="display: none;">
         <!-- Header with new grid button -->
         <div class="header">
             <button id="newGridButton" class="new-grid-button">🔄</button>
             <div class="title">Image Grid</div>
+            <button id="changeCategoryButton" class="change-category-button" title="Change Category">⚙️</button>
         </div>
 
         <!-- Game area with 3x3 grid -->
