@@ -75,7 +75,13 @@
     {"word": "sister", "weight": 1},
     {"word": "nose", "weight": 1},
     {"word": "notebook", "weight": 1},
-    {"word": "brother", "weight": 1}
+    {"word": "brother", "weight": 1},
+    {"word": "help", "weight": 1},
+    {"word": "sad", "weight": 1},
+    {"word": "bad", "weight": 1},
+    {"word": "dad", "weight": 1},
+    {"word": "duck", "weight": 1},
+    {"word": "desk", "weight": 1}
   ],
   "numbers": [
     {"word": "zero", "weight": 1},
