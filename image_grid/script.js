@@ -111,8 +111,16 @@ class ImageGridGame {
     }
 
     getRandomImages(count) {
-        const shuffled = [...this.images].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, count);
+        // Use Fisher-Yates shuffle to ensure proper randomization without duplicates
+        const shuffled = [...this.images];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        
+        // Take only the requested count (max: available images)
+        const actualCount = Math.min(count, shuffled.length);
+        return shuffled.slice(0, actualCount);
     }
 
     displayGrid() {
