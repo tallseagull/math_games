@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Choice Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Multiple Choice Quiz</h1>
+        </header>
+
+        <!-- Quiz Selection Screen -->
+        <div id="quiz-selection" class="screen active">
+            <h2>Select a Quiz</h2>
+            <div id="quiz-list" class="quiz-list"></div>
+        </div>
+
+        <!-- Quiz Playing Screen -->
+        <div id="quiz-playing" class="screen">
+            <div class="quiz-header">
+                <h2 id="quiz-title"></h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <p class="question-counter">
+                    <span id="current-question">1</span> / <span id="total-questions">10</span>
+                </p>
+            </div>
+
+            <div class="question-container">
+                <h3 id="question-text" class="question-text"></h3>
+                <div id="answers-container" class="answers-container"></div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button id="next-button" class="btn btn-primary">Next Question</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results" class="screen">
+            <div class="results-container">
+                <h2>Quiz Complete!</h2>
+                <div class="score-display">
+                    <p class="score-label">Your Score</p>
+                    <p class="score-value">
+                        <span id="score">0</span> / <span id="total">0</span>
+                    </p>
+                    <p class="score-percentage" id="percentage">0%</p>
+                </div>
+                <div class="results-summary" id="results-summary"></div>
+                <button id="back-to-quizzes" class="btn btn-primary">Back to Quiz Selection</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
