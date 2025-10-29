@@ -50,12 +50,62 @@ body {
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     text-align: center;
+    max-width: 900px;
 }
 
 .game-setup h2 {
     color: #333;
     font-size: 2rem;
     margin-bottom: 30px;
+}
+
+.game-mode-title {
+    color: #333;
+    font-size: 2rem;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.word-list-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+    justify-items: center;
+}
+
+.word-list-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 25px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    max-width: 280px;
+    text-align: left;
+}
+
+.word-list-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.word-list-button:active {
+    transform: translateY(-2px);
+}
+
+.word-list-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.word-list-desc {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    line-height: 1.4;
 }
 
 .mode-buttons {
@@ -350,6 +400,20 @@ body {
 }
 
 @media (max-width: 768px) {
+    .game-setup {
+        padding: 25px;
+        max-width: 95%;
+    }
+    
+    .word-list-selector {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .word-list-button {
+        max-width: 100%;
+    }
+
     .game-layout {
         flex-direction: column;
         gap: 15px;

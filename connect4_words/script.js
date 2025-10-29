@@ -1,5 +1,7 @@
 // Game state
 let gameState = {
+    wordLists: {},
+    selectedListKey: null,
     words: [],
     currentPlayer: 'yellow',
     board: [],
@@ -10,21 +12,76 @@ let gameState = {
     selectedWords: []
 };
 
-// Load words from JSON file
-async function loadWords() {
+// Load word lists from JSON file
+async function loadWordLists() {
     try {
         const response = await fetch('words.json');
         const data = await response.json();
-        gameState.words = data.words;
+        gameState.wordLists = data.wordLists || {};
+        populateWordListSelector();
     } catch (error) {
-        console.error('Error loading words:', error);
-        gameState.words = ['apple', 'banana', 'cat', 'dog', 'elephant', 'flower', 'guitar', 'house', 'island', 'jungle', 'kite', 'lemon', 'mountain', 'notebook', 'ocean', 'piano', 'queen', 'rainbow', 'sun', 'tree', 'umbrella', 'violin', 'water', 'xylophone', 'yellow', 'zebra'];
+        console.error('Error loading word lists:', error);
+        // Fallback to default word list
+        gameState.wordLists = {
+            'default': {
+                name: 'Default',
+                description: 'Default word list',
+                words: ['apple', 'banana', 'cat', 'dog', 'elephant', 'flower', 'guitar', 'house', 'island', 'jungle', 'kite', 'lemon', 'mountain', 'notebook', 'ocean', 'piano', 'queen', 'rainbow', 'sun', 'tree', 'umbrella', 'violin', 'water', 'xylophone', 'yellow', 'zebra']
+            }
+        };
+        populateWordListSelector();
     }
+}
+
+// Populate the word list selector
+function populateWordListSelector() {
+    const selector = document.getElementById('wordListSelector');
+    selector.innerHTML = '';
+    
+    const listKeys = Object.keys(gameState.wordLists);
+    
+    if (listKeys.length === 0) {
+        selector.innerHTML = '<p>No word lists available</p>';
+        return;
+    }
+    
+    listKeys.forEach(key => {
+        const list = gameState.wordLists[key];
+        const button = document.createElement('button');
+        button.className = 'word-list-button';
+        button.dataset.listKey = key;
+        
+        const name = document.createElement('div');
+        name.className = 'word-list-name';
+        name.textContent = list.name;
+        
+        const desc = document.createElement('div');
+        desc.className = 'word-list-desc';
+        desc.textContent = list.description;
+        
+        button.appendChild(name);
+        button.appendChild(desc);
+        
+        button.addEventListener('click', () => selectWordList(key));
+        selector.appendChild(button);
+    });
+}
+
+// Handle word list selection
+function selectWordList(listKey) {
+    gameState.selectedListKey = listKey;
+    gameState.words = gameState.wordLists[listKey].words;
+    
+    // Hide word list selector, show game mode selection
+    document.getElementById('wordListSelector').style.display = 'none';
+    document.querySelector('#gameSetup h2').textContent = 'Choose Game Mode';
+    document.getElementById('gameModeTitle').style.display = 'none';
+    document.getElementById('modeButtons').style.display = 'flex';
 }
 
 // Initialize the game
 async function init() {
-    await loadWords();
+    await loadWordLists();
     setupModeSelection();
 }
 
@@ -274,6 +331,11 @@ document.getElementById('newGameButton').addEventListener('click', () => {
 
 // Change mode button
 document.getElementById('changeModeButton').addEventListener('click', () => {
+    // Reset to word list selection
+    document.getElementById('wordListSelector').style.display = 'grid';
+    document.querySelector('#gameSetup h2').textContent = 'Choose Word List';
+    document.getElementById('gameModeTitle').style.display = 'none';
+    document.getElementById('modeButtons').style.display = 'none';
     document.getElementById('gameSetup').style.display = 'block';
     document.getElementById('gameContainer').style.display = 'none';
 });

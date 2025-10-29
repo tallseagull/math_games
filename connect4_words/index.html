@@ -10,8 +10,12 @@
     <div class="container">
         <a href="../index.html" class="back-link">← Back</a>
         <div class="game-setup" id="gameSetup">
-            <h2>Choose Game Mode</h2>
-            <div class="mode-buttons">
+            <h2>Choose Word List</h2>
+            <div class="word-list-selector" id="wordListSelector">
+                <!-- Word lists will be populated by JavaScript -->
+            </div>
+            <h2 class="game-mode-title" id="gameModeTitle" style="display: none;">Choose Game Mode</h2>
+            <div class="mode-buttons" id="modeButtons" style="display: none;">
                 <button class="mode-button" data-rows="3" data-cols="3" data-connect="3">
                     Tic-Tac-Toe<br><span class="mode-subtitle">(3x3 - Connect 3)</span>
                 </button>
