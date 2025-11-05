@@ -81,7 +81,13 @@
     {"word": "bad", "weight": 1},
     {"word": "dad", "weight": 1},
     {"word": "duck", "weight": 1},
-    {"word": "desk", "weight": 1}
+    {"word": "desk", "weight": 1},
+    {"word": "house", "weight": 1},
+    {"word": "gift", "weight": 1},
+    {"word": "gray", "weight": 1},
+    {"word": "grandpa", "weight": 1},
+    {"word": "grandma", "weight": 1},
+    {"word": "do", "weight": 1}
   ],
   "numbers": [
     {"word": "zero", "weight": 1},
