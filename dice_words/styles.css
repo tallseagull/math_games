@@ -1,0 +1,467 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Configuration Selection Screen */
+.configuration-selection {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.configuration-content {
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.configuration-title {
+    color: white;
+    font-size: 48px;
+    margin-bottom: 40px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.configuration-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.configuration-option {
+    background: white;
+    border-radius: 20px;
+    padding: 30px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.configuration-option:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.configuration-option:active {
+    transform: translateY(-5px) scale(1.02);
+}
+
+.configuration-icon {
+    font-size: 60px;
+}
+
+.configuration-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.configuration-count {
+    font-size: 14px;
+    color: #888;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Game Container */
+.game-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.change-configuration-button {
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.change-configuration-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.change-configuration-button:active {
+    transform: scale(0.95);
+}
+
+/* Word Display */
+.word-display {
+    width: 100%;
+    padding: 40px 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.5s ease-out;
+}
+
+.word-text {
+    font-size: 72px;
+    font-weight: bold;
+    color: #667eea;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.2em;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dice Container */
+.dice-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    min-height: 0;
+    gap: 40px;
+}
+
+#dice-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    perspective: 1000px;
+}
+
+/* 3D Dice */
+.dice {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.1s;
+}
+
+.dice.rolling {
+    animation: rollDice 1.5s ease-out;
+}
+
+@keyframes rollDice {
+    0% {
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+    100% {
+        transform: rotateX(var(--roll-x, 360deg)) rotateY(var(--roll-y, 360deg)) rotateZ(var(--roll-z, 360deg));
+    }
+}
+
+.dice .face {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    backface-visibility: hidden;
+    text-transform: none; /* Preserve the case from config */
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+/* Face positions for a cube
+ * Standard die layout:
+ * Face 1: Front (rotateY 0deg)
+ * Face 2: Right (rotateY 90deg)
+ * Face 3: Top (rotateX -90deg) - negative rotates up
+ * Face 4: Bottom (rotateX 90deg) - positive rotates down
+ * Face 5: Left (rotateY -90deg)
+ * Face 6: Back (rotateY 180deg)
+ */
+.dice .face-1 {
+    transform: rotateY(0deg) translateZ(60px);
+}
+
+.dice .face-2 {
+    transform: rotateY(90deg) translateZ(60px);
+}
+
+.dice .face-3 {
+    transform: rotateX(-90deg) translateZ(60px);
+}
+
+.dice .face-4 {
+    transform: rotateX(90deg) translateZ(60px);
+}
+
+.dice .face-5 {
+    transform: rotateY(-90deg) translateZ(60px);
+}
+
+.dice .face-6 {
+    transform: rotateY(180deg) translateZ(60px);
+}
+
+/* Roll Button */
+.roll-button-container {
+    padding: 30px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.roll-button {
+    width: 200px;
+    height: 80px;
+    border: none;
+    border-radius: 40px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.roll-button:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6);
+}
+
+.roll-button:active {
+    transform: translateY(-2px) scale(1.02);
+}
+
+.roll-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .configuration-title {
+        font-size: 36px;
+        margin-bottom: 30px;
+    }
+    
+    .configuration-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    
+    .configuration-option {
+        padding: 20px 15px;
+    }
+    
+    .configuration-icon {
+        font-size: 50px;
+    }
+    
+    .configuration-name {
+        font-size: 18px;
+    }
+    
+    .word-text {
+        font-size: 56px;
+    }
+    
+    .dice {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .dice .face {
+        width: 100px;
+        height: 100px;
+        font-size: 40px;
+    }
+    
+    .dice .face-1 {
+        transform: rotateY(0deg) translateZ(50px);
+    }
+    
+    .dice .face-2 {
+        transform: rotateY(90deg) translateZ(50px);
+    }
+    
+    .dice .face-3 {
+        transform: rotateX(-90deg) translateZ(50px);
+    }
+    
+    .dice .face-4 {
+        transform: rotateX(90deg) translateZ(50px);
+    }
+    
+    .dice .face-5 {
+        transform: rotateY(-90deg) translateZ(50px);
+    }
+    
+    .dice .face-6 {
+        transform: rotateY(180deg) translateZ(50px);
+    }
+    
+    #dice-box {
+        gap: 20px;
+    }
+    
+    .roll-button {
+        width: 180px;
+        height: 70px;
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .configuration-title {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+    
+    .configuration-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+    }
+    
+    .configuration-option {
+        padding: 15px 10px;
+    }
+    
+    .configuration-icon {
+        font-size: 40px;
+    }
+    
+    .configuration-name {
+        font-size: 16px;
+    }
+    
+    .word-text {
+        font-size: 42px;
+        letter-spacing: 0.1em;
+    }
+    
+    .word-display {
+        padding: 30px 15px;
+    }
+    
+    .dice {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .dice .face {
+        width: 80px;
+        height: 80px;
+        font-size: 32px;
+    }
+    
+    .dice .face-1 {
+        transform: rotateY(0deg) translateZ(40px);
+    }
+    
+    .dice .face-2 {
+        transform: rotateY(90deg) translateZ(40px);
+    }
+    
+    .dice .face-3 {
+        transform: rotateX(-90deg) translateZ(40px);
+    }
+    
+    .dice .face-4 {
+        transform: rotateX(90deg) translateZ(40px);
+    }
+    
+    .dice .face-5 {
+        transform: rotateY(-90deg) translateZ(40px);
+    }
+    
+    .dice .face-6 {
+        transform: rotateY(180deg) translateZ(40px);
+    }
+    
+    #dice-box {
+        gap: 15px;
+    }
+    
+    .roll-button {
+        width: 160px;
+        height: 60px;
+        font-size: 20px;
+    }
+    
+    .change-configuration-button {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+}
+
