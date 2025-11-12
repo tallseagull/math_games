@@ -171,6 +171,9 @@ function handleCellClick(row, col, cellElement) {
     // Check for win
     if (checkWin(row, col)) {
         endGame(gameState.currentPlayer);
+    } else if (isBoardFull()) {
+        // Board is full and no winner - it's a draw
+        endGame(null);
     } else {
         // Switch player
         switchPlayer();
@@ -261,22 +264,40 @@ function checkDirection(row, col, rowDir, colDir, color, n) {
     return null;
 }
 
+// Check if the board is full
+function isBoardFull() {
+    for (let row = 0; row < gameState.rows; row++) {
+        for (let col = 0; col < gameState.cols; col++) {
+            if (gameState.board[row][col] === null) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 // End the game and show winner
 function endGame(winner) {
     gameState.gameOver = true;
     
-    // Highlight winning positions
-    const winningPositions = findAllWinningPositions(winner);
-    if (winningPositions.length > 0) {
-        highlightWinningCells(winningPositions);
-    }
-    
-    // Hide pass button and show winner message and controls
+    // Hide pass button and show message and controls
     document.getElementById('passButton').style.display = 'none';
     
     const winnerMessage = document.getElementById('winnerMessage');
-    const displayName = winner.charAt(0).toUpperCase() + winner.slice(1);
-    winnerMessage.innerHTML = `<span class="player-circle ${winner}"></span> ${displayName} Wins!`;
+    
+    if (winner === null) {
+        // It's a draw
+        winnerMessage.innerHTML = `It's a Draw!`;
+    } else {
+        // Highlight winning positions
+        const winningPositions = findAllWinningPositions(winner);
+        if (winningPositions.length > 0) {
+            highlightWinningCells(winningPositions);
+        }
+        
+        const displayName = winner.charAt(0).toUpperCase() + winner.slice(1);
+        winnerMessage.innerHTML = `<span class="player-circle ${winner}"></span> ${displayName} Wins!`;
+    }
     
     document.getElementById('gameControls').style.display = 'flex';
 }
