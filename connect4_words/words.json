@@ -31,12 +31,11 @@
         "you", "under", "umbrella", "jump", "party", "game", "foot", "glad", "king", "water", 
         "window", "queen", "eyes", "ears", "monkey", "zoo", "quiet", "top", "ice cream", 
         "candy", "cake", "cut", "van", "magic", "head", "kid", "long", "great", "talk",
-        "friend", "grade", "house", "new", "school", "teacher", "town", "bird", "brother", 
-        "family", "fly", "lesson", "nice", "sister", "want", "talk", "English",
+        "friend", "grade", "house", "new", "school", "teacher", "town", "bird", 
+        "family", "fly", "lesson", "nice", "want", "talk", "English",
         "board", "book", "chair", "eraser", "homework", "lunch", "need", "notebook", "paper", 
-        "pencil", "thanks", "address", "food", "me", "meet", "phone number", "please",
-        "pupil", "see", "write", "art", "class", "computer", "day", "happy", "learn", "math", 
-        "music", "sports", "week"
+        "pencil", "thanks", "what's your .....?", "street", "address", "phone number", "please", "live",
+        "how old ....?", "let's go", "have"
       ]
     }
   }
