@@ -158,9 +158,30 @@ function createBoard() {
     }
 }
 
+// Check if a move is valid in Connect4 mode
+function isValidConnect4Move(row, col) {
+    // In Connect4, you can only place in:
+    // 1. The bottom row (row === rows - 1), OR
+    // 2. A cell that has a filled cell directly below it
+    if (row === gameState.rows - 1) {
+        return true; // Bottom row is always valid
+    }
+    
+    // Check if the cell below is filled
+    return gameState.board[row + 1][col] !== null;
+}
+
 // Handle cell click
 function handleCellClick(row, col, cellElement) {
     if (gameState.gameOver || gameState.board[row][col] !== null) {
+        return;
+    }
+    
+    // For Connect4 mode, validate the move
+    const isConnect4 = gameState.rows === 6 && gameState.cols === 7 && gameState.connectN === 4;
+    if (isConnect4 && !isValidConnect4Move(row, col)) {
+        // Show visual feedback for invalid move
+        showInvalidMoveFeedback(cellElement);
         return;
     }
     
@@ -178,6 +199,14 @@ function handleCellClick(row, col, cellElement) {
         // Switch player
         switchPlayer();
     }
+}
+
+// Show visual feedback for invalid move
+function showInvalidMoveFeedback(cellElement) {
+    cellElement.classList.add('invalid-move');
+    setTimeout(() => {
+        cellElement.classList.remove('invalid-move');
+    }, 500);
 }
 
 // Fill a cell with a colored circle

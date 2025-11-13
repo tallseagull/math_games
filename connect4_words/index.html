@@ -8,7 +8,6 @@
 </head>
 <body>
     <div class="container">
-        <a href="../index.html" class="back-link">← Back</a>
         <div class="game-setup" id="gameSetup">
             <h2>Choose Word List</h2>
             <div class="word-list-selector" id="wordListSelector">
@@ -27,24 +26,27 @@
 
         <div class="game-container" id="gameContainer" style="display: none;">
             <div class="game-layout">
-                <div class="game-sidebar">
-                    <div class="current-player">
-                        <span class="player-label">Current Player:</span>
-                        <span class="player-indicator" id="currentPlayerIndicator">
-                            <span class="player-circle yellow"></span> Yellow
-                        </span>
+                <a href="../index.html" class="back-link">← Back</a>
+                <div class="game-content">
+                    <div class="game-sidebar">
+                        <div class="current-player">
+                            <span class="player-label">Current Player:</span>
+                            <span class="player-indicator" id="currentPlayerIndicator">
+                                <span class="player-circle yellow"></span> Yellow
+                            </span>
+                        </div>
+                        
+                        <button class="pass-button" id="passButton">Pass Turn</button>
+                        
+                        <div class="game-controls" id="gameControls" style="display: none;">
+                            <div class="winner-message" id="winnerMessage"></div>
+                            <button class="new-game-button" id="newGameButton">New Game</button>
+                            <button class="change-mode-button" id="changeModeButton">Change Mode</button>
+                        </div>
                     </div>
-                    
-                    <button class="pass-button" id="passButton">Pass Turn</button>
-                    
-                    <div class="game-controls" id="gameControls" style="display: none;">
-                        <div class="winner-message" id="winnerMessage"></div>
-                        <button class="new-game-button" id="newGameButton">New Game</button>
-                        <button class="change-mode-button" id="changeModeButton">Change Mode</button>
-                    </div>
-                </div>
 
-                <div id="gameBoard" class="game-board"></div>
+                    <div id="gameBoard" class="game-board"></div>
+                </div>
             </div>
         </div>
     </div>
