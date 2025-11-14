@@ -116,6 +116,11 @@ function startGame(rows, cols, connectN) {
     document.getElementById('gameControls').style.display = 'none';
     document.getElementById('passButton').style.display = 'block';
     
+    // Hide winner message overlay
+    const winnerMessage = document.getElementById('winnerMessage');
+    winnerMessage.classList.remove('show');
+    winnerMessage.innerHTML = '';
+    
     // Create the game board
     createBoard();
     updatePlayerIndicator();
@@ -327,6 +332,9 @@ function endGame(winner) {
         const displayName = winner.charAt(0).toUpperCase() + winner.slice(1);
         winnerMessage.innerHTML = `<span class="player-circle ${winner}"></span> ${displayName} Wins!`;
     }
+    
+    // Show the winner message overlay
+    winnerMessage.classList.add('show');
     
     document.getElementById('gameControls').style.display = 'flex';
 }
