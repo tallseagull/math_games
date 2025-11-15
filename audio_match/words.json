@@ -87,7 +87,14 @@
     {"word": "gray", "weight": 1},
     {"word": "grandpa", "weight": 1},
     {"word": "grandma", "weight": 1},
-    {"word": "do", "weight": 1}
+    {"word": "do", "weight": 1},
+    {"word": "bed", "weight": 1},
+    {"word": "elephant", "weight": 1},
+    {"word": "table", "weight": 1},
+    {"word": "eraser", "weight": 1},
+    {"word": "egg", "weight": 1},
+    {"word": "pencil", "weight": 1},
+    {"word": "school", "weight": 1}
   ],
   "numbers": [
     {"word": "zero", "weight": 1},

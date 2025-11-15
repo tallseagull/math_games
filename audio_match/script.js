@@ -40,6 +40,14 @@ class AudioMatchGame {
             const data = await response.json();
             this.allCategories = data;
             
+            // Check URL parameter first (for Golda integration)
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryParam = urlParams.get('category');
+            if (categoryParam && this.allCategories[categoryParam]) {
+                this.selectCategory(categoryParam);
+                return;
+            }
+            
             // Check if there's a saved category in localStorage
             const savedCategory = localStorage.getItem('audioMatchCategory');
             if (savedCategory && this.allCategories[savedCategory]) {

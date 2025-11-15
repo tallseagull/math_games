@@ -45,6 +45,22 @@ function populateWordListSelector() {
         return;
     }
     
+    // Check URL parameter first (for Golda integration)
+    const urlParams = new URLSearchParams(window.location.search);
+    const gradeParam = urlParams.get('grade');
+    if (gradeParam) {
+        // Map grade parameter to word list key
+        const gradeMap = {
+            '4th': '4th_grade',
+            '5th': '5th_grade'
+        };
+        const listKey = gradeMap[gradeParam];
+        if (listKey && gameState.wordLists[listKey]) {
+            selectWordList(listKey);
+            return;
+        }
+    }
+    
     listKeys.forEach(key => {
         const list = gameState.wordLists[key];
         const button = document.createElement('button');
