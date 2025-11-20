@@ -206,8 +206,15 @@ class AudioMatchGame {
         // Get 3 random wrong words
         const wrongWords = this.getRandomWrongWords();
         
-        // Create array with correct word and wrong words
-        const allWords = [this.currentWord, ...wrongWords];
+        // Create array with correct word and wrong words, ensuring uniqueness
+        const allWords = [this.currentWord];
+        const usedWords = new Set([this.currentWord]);
+        for (const word of wrongWords) {
+            if (!usedWords.has(word)) {
+                allWords.push(word);
+                usedWords.add(word);
+            }
+        }
         
         // Shuffle the array
         this.shuffleArray(allWords);
@@ -237,12 +244,27 @@ class AudioMatchGame {
 
     getRandomWrongWords() {
         const wrongWords = [];
-        const availableWords = this.words.filter(wordObj => wordObj.word !== this.currentWord);
+        const usedWords = new Set([this.currentWord]); // Track used words to ensure uniqueness
         
-        while (wrongWords.length < 3 && availableWords.length > 0) {
-            const randomIndex = Math.floor(Math.random() * availableWords.length);
-            const wordObj = availableWords.splice(randomIndex, 1)[0];
-            wrongWords.push(wordObj.word);
+        // Get unique available words (filter out current word and get unique word strings)
+        const uniqueAvailableWords = [];
+        const seenWords = new Set();
+        for (const wordObj of this.words) {
+            if (wordObj.word !== this.currentWord && !seenWords.has(wordObj.word)) {
+                uniqueAvailableWords.push(wordObj.word);
+                seenWords.add(wordObj.word);
+            }
+        }
+        
+        // Shuffle and pick 3 unique wrong words
+        const shuffled = [...uniqueAvailableWords].sort(() => Math.random() - 0.5);
+        
+        while (wrongWords.length < 3 && shuffled.length > 0) {
+            const word = shuffled.pop();
+            if (!usedWords.has(word)) {
+                wrongWords.push(word);
+                usedWords.add(word);
+            }
         }
         
         return wrongWords;
