@@ -94,7 +94,14 @@
     {"word": "eraser", "weight": 1},
     {"word": "egg", "weight": 1},
     {"word": "pencil", "weight": 1},
-    {"word": "school", "weight": 1}
+    {"word": "school", "weight": 1},
+    {"word": "plus", "weight": 1},
+    {"word": "hat", "weight": 1},
+    {"word": "pencil case", "weight": 1},
+    {"word": "add", "weight": 1},
+    {"word": "teacher", "weight": 1},
+    {"word": "pen", "weight": 1},
+    {"word": "test", "weight": 1}
   ],
   "numbers": [
     {"word": "zero", "weight": 1},

@@ -160,6 +160,22 @@ class DiceWordGame {
         }
     }
 
+    updateDiceFaces() {
+        // Update the letters on each dice face without recreating the dice
+        const diceElements = this.diceBoxElement.querySelectorAll('.dice');
+        
+        for (let i = 0; i < diceElements.length; i++) {
+            const dieElement = diceElements[i];
+            const faceElements = dieElement.querySelectorAll('.face');
+            
+            // Update each face with the new letter assignment
+            for (let face = 0; face < 6; face++) {
+                const letter = this.diceLetterMaps[i][face];
+                faceElements[face].textContent = letter;
+            }
+        }
+    }
+
     async rollDice() {
         if (this.isRolling) return;
         
@@ -237,6 +253,11 @@ class DiceWordGame {
         
         // Display word
         this.displayWord(word);
+        
+        // Reassign letters to dice faces randomly for the next roll
+        this.assignLettersToDice();
+        // Update the dice faces with new letters (but keep current rotation)
+        this.updateDiceFaces();
         
         // Re-enable roll button
         this.isRolling = false;
