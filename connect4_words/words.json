@@ -37,6 +37,12 @@
         "pencil", "thanks", "what's your .....?", "street", "address", "phone number", "please", "live",
         "how old ....?", "let's go", "have"
       ]
+    },
+    "gimel_images": {
+      "name": "3rd Grade Images",
+      "description": "Images for 3rd grade (Gimel) level",
+      "isImageMode": true,
+      "category": "Gimel"
     }
   }
 }

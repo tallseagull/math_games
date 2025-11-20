@@ -1,6 +1,7 @@
 // Game state
 let gameState = {
     wordLists: {},
+    imageCategories: {},
     selectedListKey: null,
     words: [],
     currentPlayer: 'yellow',
@@ -9,7 +10,8 @@ let gameState = {
     cols: 0,
     connectN: 0,
     gameOver: false,
-    selectedWords: []
+    selectedWords: [],
+    isImageMode: false
 };
 
 // Load word lists from JSON file
@@ -18,6 +20,17 @@ async function loadWordLists() {
         const response = await fetch('words.json');
         const data = await response.json();
         gameState.wordLists = data.wordLists || {};
+        
+        // Load images.json for image mode support
+        try {
+            const imagesResponse = await fetch('images.json');
+            const imagesData = await imagesResponse.json();
+            gameState.imageCategories = imagesData || {};
+        } catch (error) {
+            console.error('Error loading images:', error);
+            gameState.imageCategories = {};
+        }
+        
         populateWordListSelector();
     } catch (error) {
         console.error('Error loading word lists:', error);
@@ -48,6 +61,13 @@ function populateWordListSelector() {
     // Check URL parameter first (for Golda integration)
     const urlParams = new URLSearchParams(window.location.search);
     const gradeParam = urlParams.get('grade');
+    const listKeyParam = urlParams.get('listKey');
+    
+    if (listKeyParam && gameState.wordLists[listKeyParam]) {
+        selectWordList(listKeyParam);
+        return;
+    }
+    
     if (gradeParam) {
         // Map grade parameter to word list key
         const gradeMap = {
@@ -84,9 +104,24 @@ function populateWordListSelector() {
 }
 
 // Handle word list selection
-function selectWordList(listKey) {
+async function selectWordList(listKey) {
     gameState.selectedListKey = listKey;
-    gameState.words = gameState.wordLists[listKey].words;
+    const list = gameState.wordLists[listKey];
+    
+    // Check if this is image mode
+    if (list.isImageMode && list.category) {
+        gameState.isImageMode = true;
+        // Load words from image category
+        if (gameState.imageCategories[list.category]) {
+            gameState.words = gameState.imageCategories[list.category];
+        } else {
+            console.error('Image category not found:', list.category);
+            return;
+        }
+    } else {
+        gameState.isImageMode = false;
+        gameState.words = list.words || [];
+    }
     
     // Hide word list selector, show game mode selection
     document.getElementById('wordListSelector').style.display = 'none';
@@ -160,6 +195,11 @@ function createBoard() {
         gameBoard.className = 'game-board connect4';
     }
     
+    // Add image mode class if applicable
+    if (gameState.isImageMode) {
+        gameBoard.classList.add('image-mode');
+    }
+    
     let wordIndex = 0;
     for (let row = 0; row < gameState.rows; row++) {
         for (let col = 0; col < gameState.cols; col++) {
@@ -168,10 +208,37 @@ function createBoard() {
             cell.dataset.row = row;
             cell.dataset.col = col;
             
-            const word = document.createElement('div');
-            word.className = 'cell-word';
-            word.textContent = gameState.selectedWords[wordIndex++];
-            cell.appendChild(word);
+            const word = gameState.selectedWords[wordIndex++];
+            
+            if (gameState.isImageMode) {
+                // Create image element
+                const imageContainer = document.createElement('div');
+                imageContainer.className = 'cell-image-container';
+                const img = document.createElement('img');
+                img.className = 'cell-image';
+                
+                // Replace spaces with underscores in image filename
+                const imageName = word.replace(/ /g, '_');
+                
+                img.src = `../shared/static/images/${imageName}.jpg`;
+                img.alt = word;
+                img.onerror = function() {
+                    // Fallback if image doesn't exist - show word instead
+                    this.style.display = 'none';
+                    const fallback = document.createElement('div');
+                    fallback.className = 'cell-word';
+                    fallback.textContent = word;
+                    imageContainer.appendChild(fallback);
+                };
+                imageContainer.appendChild(img);
+                cell.appendChild(imageContainer);
+            } else {
+                // Create word element
+                const wordElement = document.createElement('div');
+                wordElement.className = 'cell-word';
+                wordElement.textContent = word;
+                cell.appendChild(wordElement);
+            }
             
             cell.addEventListener('click', () => handleCellClick(row, col, cell));
             gameBoard.appendChild(cell);

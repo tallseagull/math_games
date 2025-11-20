@@ -139,7 +139,9 @@ class ImageGridGame {
             imageTile.className = 'image-tile';
             
             const img = document.createElement('img');
-            img.src = `../shared/static/images/${imageName}.jpg`;
+            // Replace spaces with underscores in image filename
+            const imageFileName = imageName.replace(/ /g, '_');
+            img.src = `../shared/static/images/${imageFileName}.jpg`;
             img.alt = imageName;
             img.onerror = () => {
                 // If image fails to load, show a placeholder

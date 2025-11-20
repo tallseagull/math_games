@@ -322,6 +322,10 @@ body {
     border-color: #333;
 }
 
+.cell.filled .cell-image-container {
+    display: none;
+}
+
 .cell-word {
     font-size: 2.5rem;
     font-weight: bold;
@@ -330,6 +334,22 @@ body {
     word-wrap: break-word;
     z-index: 1;
     line-height: 1.2;
+}
+
+.cell-image-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.cell-image {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 5px;
 }
 
 .cell-circle {

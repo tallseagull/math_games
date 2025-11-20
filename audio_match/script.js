@@ -219,7 +219,9 @@ class AudioMatchGame {
             imageOption.dataset.word = word;
             
             const img = document.createElement('img');
-            img.src = `../shared/static/images/${word}.jpg`;
+            // Replace spaces with underscores in image filename
+            const imageFileName = word.replace(/ /g, '_');
+            img.src = `../shared/static/images/${imageFileName}.jpg`;
             img.alt = word;
             img.onerror = () => {
                 // If image fails to load, show a placeholder

@@ -179,7 +179,11 @@
 
         function showGameSelection(gradeLabel, category) {
             const container = document.querySelector('.container');
-            container.innerHTML = `
+            const connect4ImagesLink = gradeLabel === '3rd' 
+                ? '../connect4_words/index.html?listKey=gimel_images'
+                : '';
+            
+            let gamesHTML = `
                 <h1>🏫 Golda - ${gradeLabel === '3rd' ? '3rd Grade' : 'Partani'}</h1>
                 <p class="subtitle">Choose a game to play</p>
                 
@@ -206,11 +210,26 @@
                         <div class="grade-description">
                             Explore a 3x3 grid of random images.
                         </div>
-                    </a>
+                    </a>`;
+            
+            if (gradeLabel === '3rd' && connect4ImagesLink) {
+                gamesHTML += `
+                    <a href="${connect4ImagesLink}" class="grade-card">
+                        <span class="grade-icon">🔴🟡</span>
+                        <div class="grade-title">Connect 4 Images</div>
+                        <div class="grade-description">
+                            Play Connect 4 or Tic-Tac-Toe with images!
+                        </div>
+                    </a>`;
+            }
+            
+            gamesHTML += `
                 </div>
                 
                 <a href="index.html" class="back-button">← Back to Grade Selection</a>
             `;
+            
+            container.innerHTML = gamesHTML;
         }
     </script>
 </body>
