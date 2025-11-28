@@ -1,0 +1,4 @@
+# Netlify configuration
+# The pdf_word_processor directory is excluded via .netlifyignore
+# This is a Python/Streamlit app, not needed for the frontend deployment
+

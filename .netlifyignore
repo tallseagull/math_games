@@ -1,0 +1,4 @@
+# Exclude pdf_word_processor from Netlify builds
+# This is a Python/Streamlit app, not needed for the frontend deployment
+pdf_word_processor/
+

@@ -178,3 +178,6 @@ storybook-static/
 
 # Turbo
 .turbo/
+
+# Python virtual environments
+pdf_word_processor/venv/
