@@ -101,7 +101,21 @@
     {"word": "add", "weight": 1},
     {"word": "teacher", "weight": 1},
     {"word": "pen", "weight": 1},
-    {"word": "test", "weight": 1}
+    {"word": "test", "weight": 1},
+    {"word": "in", "weight": 1},
+    {"word": "on", "weight": 1},
+    {"word": "pupil", "weight": 1},
+    {"word": "picture", "weight": 1},
+    {"word": "chair", "weight": 1},
+    {"word": "lost", "weight": 1},
+    {"word": "ask", "weight": 1},
+    {"word": "play", "weight": 1},
+    {"word": "sing", "weight": 1},
+    {"word": "run", "weight": 1},
+    {"word": "rest", "weight": 1},
+    {"word": "hen", "weight": 1},
+    {"word": "rabbit", "weight": 1},
+    {"word": "best", "weight": 1}
   ],
   "numbers": [
     {"word": "zero", "weight": 1},
