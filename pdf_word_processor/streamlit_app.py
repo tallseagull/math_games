@@ -120,11 +120,11 @@ if st.session_state.processed_data:
     if 'word_acceptance' not in st.session_state:
         st.session_state.word_acceptance = {word: False for word in words}
     
-    # Display words in a scrollable container
+    # Display words in a scrollable container with 2-column layout
     with st.container():
         for idx, word in enumerate(words):
             with st.expander(f"Word {idx + 1}: {word}", expanded=True):
-                col1, col2, col3 = st.columns([1, 2, 1])
+                col1, col2 = st.columns([1, 1])
                 
                 with col1:
                     # Checkbox for acceptance
@@ -134,17 +134,16 @@ if st.session_state.processed_data:
                         key=f"accept_{idx}"
                     )
                     st.session_state.word_acceptance[word] = accepted
-                
-                with col2:
-                    # Display image
+                    
+                    # Display image (smaller size - max width 200px)
                     image_filename = sanitize_filename(word) + ".jpg"
                     image_path = os.path.join(images_dir, image_filename)
                     if os.path.exists(image_path):
-                        st.image(image_path, caption=word, width='stretch')
+                        st.image(image_path, caption=word, width=200)
                     else:
                         st.warning(f"Image not found: {image_filename}")
                 
-                with col3:
+                with col2:
                     # Display audio player
                     audio_filename = sanitize_filename(word) + ".mp3"
                     audio_path = os.path.join(audio_dir, audio_filename)
@@ -155,15 +154,98 @@ if st.session_state.processed_data:
                     else:
                         st.warning(f"Audio not found: {audio_filename}")
     
-    # Add accepted words button
+    # Save button - saves images and audio immediately (overwrites existing files)
     accepted_words = [word for word, accepted in st.session_state.word_acceptance.items() if accepted]
     
     if accepted_words:
-        st.info(f"{len(accepted_words)} word(s) selected for addition.")
+        st.info(f"{len(accepted_words)} word(s) selected.")
         
-        if st.button("Add Accepted Words to Repository"):
-            st.session_state.accepted_words = accepted_words
-            st.rerun()
+        # Save button that immediately saves images and audio to shared/static directories
+        if st.button("💾 Save Images & Audio", type="primary", use_container_width=True):
+            with st.spinner("Saving images and audio files..."):
+                project_root = get_project_root()
+                shared_images_dir = project_root / "shared" / "static" / "images"
+                shared_audio_dir = project_root / "shared" / "static" / "audio"
+                
+                # Log the save paths
+                st.info(f"📁 **Save Paths:**\n- Images: `{shared_images_dir}`\n- Audio: `{shared_audio_dir}`")
+                
+                shared_images_dir.mkdir(parents=True, exist_ok=True)
+                shared_audio_dir.mkdir(parents=True, exist_ok=True)
+                
+                saved_images = 0
+                saved_audio = 0
+                log_messages = []
+                
+                for word in accepted_words:
+                    # Copy image (overwrites if exists)
+                    image_filename = sanitize_filename(word) + ".jpg"
+                    src_image = os.path.join(images_dir, image_filename)
+                    dst_image = shared_images_dir / image_filename
+                    
+                    if os.path.exists(src_image):
+                        src_size = os.path.getsize(src_image)
+                        existed_before = dst_image.exists()
+                        if existed_before:
+                            old_size = os.path.getsize(dst_image)
+                        
+                        try:
+                            shutil.copy2(src_image, dst_image)
+                            dst_size = os.path.getsize(dst_image)
+                            saved_images += 1
+                            
+                            status = "✅ OVERWRITTEN" if existed_before else "✅ CREATED"
+                            log_msg = f"{status} Image: `{image_filename}`"
+                            if existed_before:
+                                log_msg += f" (old: {old_size} bytes → new: {dst_size} bytes)"
+                            else:
+                                log_msg += f" ({dst_size} bytes)"
+                            log_messages.append(log_msg)
+                        except Exception as e:
+                            log_messages.append(f"❌ ERROR saving image `{image_filename}`: {e}")
+                    else:
+                        log_messages.append(f"⚠️ Source image not found: `{src_image}`")
+                    
+                    # Copy audio (overwrites if exists)
+                    audio_filename = sanitize_filename(word) + ".mp3"
+                    src_audio = os.path.join(audio_dir, audio_filename)
+                    dst_audio = shared_audio_dir / audio_filename
+                    
+                    if os.path.exists(src_audio):
+                        src_size = os.path.getsize(src_audio)
+                        existed_before = dst_audio.exists()
+                        if existed_before:
+                            old_size = os.path.getsize(dst_audio)
+                        
+                        try:
+                            shutil.copy2(src_audio, dst_audio)
+                            dst_size = os.path.getsize(dst_audio)
+                            saved_audio += 1
+                            
+                            status = "✅ OVERWRITTEN" if existed_before else "✅ CREATED"
+                            log_msg = f"{status} Audio: `{audio_filename}`"
+                            if existed_before:
+                                log_msg += f" (old: {old_size} bytes → new: {dst_size} bytes)"
+                            else:
+                                log_msg += f" ({dst_size} bytes)"
+                            log_messages.append(log_msg)
+                        except Exception as e:
+                            log_messages.append(f"❌ ERROR saving audio `{audio_filename}`: {e}")
+                    else:
+                        log_messages.append(f"⚠️ Source audio not found: `{src_audio}`")
+                
+                # Display detailed log
+                with st.expander("📋 Detailed Save Log", expanded=True):
+                    for msg in log_messages:
+                        st.text(msg)
+                
+                st.success(f"✅ Saved {saved_images} image(s) and {saved_audio} audio file(s) to:\n- `{shared_images_dir}`\n- `{shared_audio_dir}`")
+                
+                # Store accepted words for JSON update step
+                st.session_state.accepted_words = accepted_words
+                st.rerun()
+    else:
+        st.info("Select words using the checkboxes above, then click 'Save Images & Audio' to save them to the repository.")
 
 # JSON update interface
 if st.session_state.accepted_words:
@@ -218,34 +300,47 @@ if st.session_state.accepted_words:
             'group': connect4_group
         }
     
-    if json_updates and st.button("Apply Updates"):
-        with st.spinner("Updating files..."):
-            # Copy images and audio to shared/static directories
-            shared_images_dir = project_root / "shared" / "static" / "images"
-            shared_audio_dir = project_root / "shared" / "static" / "audio"
-            
-            shared_images_dir.mkdir(parents=True, exist_ok=True)
-            shared_audio_dir.mkdir(parents=True, exist_ok=True)
-            
-            images_dir = st.session_state.processed_data['images_dir']
-            audio_dir = st.session_state.processed_data['audio_dir']
-            
-            for word in accepted_words:
-                # Copy image
-                image_filename = sanitize_filename(word) + ".jpg"
-                src_image = os.path.join(images_dir, image_filename)
-                dst_image = shared_images_dir / image_filename
-                if os.path.exists(src_image):
-                    shutil.copy2(src_image, dst_image)
-                    st.success(f"Copied image: {image_filename}")
+    if json_updates and st.button("💾 Apply Updates to JSON Files", type="primary", use_container_width=True):
+        with st.spinner("Updating JSON files..."):
+            # Ensure images and audio are saved (in case user skipped the Save button)
+            if st.session_state.processed_data:
+                shared_images_dir = project_root / "shared" / "static" / "images"
+                shared_audio_dir = project_root / "shared" / "static" / "audio"
                 
-                # Copy audio
-                audio_filename = sanitize_filename(word) + ".mp3"
-                src_audio = os.path.join(audio_dir, audio_filename)
-                dst_audio = shared_audio_dir / audio_filename
-                if os.path.exists(src_audio):
-                    shutil.copy2(src_audio, dst_audio)
-                    st.success(f"Copied audio: {audio_filename}")
+                shared_images_dir.mkdir(parents=True, exist_ok=True)
+                shared_audio_dir.mkdir(parents=True, exist_ok=True)
+                
+                images_dir = st.session_state.processed_data['images_dir']
+                audio_dir = st.session_state.processed_data['audio_dir']
+                
+                log_messages = []
+                for word in accepted_words:
+                    # Copy image (overwrites if exists)
+                    image_filename = sanitize_filename(word) + ".jpg"
+                    src_image = os.path.join(images_dir, image_filename)
+                    dst_image = shared_images_dir / image_filename
+                    if os.path.exists(src_image):
+                        existed_before = dst_image.exists()
+                        shutil.copy2(src_image, dst_image)
+                        status = "OVERWRITTEN" if existed_before else "CREATED"
+                        log_messages.append(f"Image `{image_filename}`: {status}")
+                    else:
+                        log_messages.append(f"⚠️ Source image not found: `{src_image}`")
+                    
+                    # Copy audio (overwrites if exists)
+                    audio_filename = sanitize_filename(word) + ".mp3"
+                    src_audio = os.path.join(audio_dir, audio_filename)
+                    dst_audio = shared_audio_dir / audio_filename
+                    if os.path.exists(src_audio):
+                        existed_before = dst_audio.exists()
+                        shutil.copy2(src_audio, dst_audio)
+                        status = "OVERWRITTEN" if existed_before else "CREATED"
+                        log_messages.append(f"Audio `{audio_filename}`: {status}")
+                    else:
+                        log_messages.append(f"⚠️ Source audio not found: `{src_audio}`")
+                
+                if log_messages:
+                    st.info(f"Files saved to:\n- Images: `{shared_images_dir}`\n- Audio: `{shared_audio_dir}`")
             
             # Update JSON files
             for app_name, config in json_updates.items():
