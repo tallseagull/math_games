@@ -1,154 +1,608 @@
 {
   "Partani": [
-    {"word": "girl", "weight": 1},
-    {"word": "cat", "weight": 1},
-    {"word": "boy", "weight": 1},
-    {"word": "mom", "weight": 1},
-    {"word": "dog", "weight": 1},
-    {"word": "black", "weight": 1},
-    {"word": "white", "weight": 1},
-    {"word": "blue", "weight": 1},
-    {"word": "red", "weight": 1},
-    {"word": "five", "weight": 1},
-    {"word": "one", "weight": 1},
-    {"word": "four", "weight": 1},
-    {"word": "three", "weight": 1},
-    {"word": "six", "weight": 1},
-    {"word": "two", "weight": 1},
-    {"word": "zero", "weight": 1},
-    {"word": "seven", "weight": 1},
-    {"word": "eight", "weight": 1},
-    {"word": "eleven", "weight": 1},
-    {"word": "ten", "weight": 1},
-    {"word": "nine", "weight": 1},
-    {"word": "twelve", "weight": 1},
-    {"word": "apple", "weight": 1},
-    {"word": "man", "weight": 1},
-    {"word": "green", "weight": 1},
-    {"word": "yellow", "weight": 1},
-    {"word": "orange", "weight": 1},
-    {"word": "woman", "weight": 1},
-    {"word": "baby", "weight": 1},
-    {"word": "big", "weight": 1},
-    {"word": "small", "weight": 1},
-    {"word": "box", "weight": 1},
-    {"word": "book", "weight": 1},
-    {"word": "bag", "weight": 1}
+    {
+      "word": "girl",
+      "weight": 1
+    },
+    {
+      "word": "cat",
+      "weight": 1
+    },
+    {
+      "word": "boy",
+      "weight": 1
+    },
+    {
+      "word": "mom",
+      "weight": 1
+    },
+    {
+      "word": "dog",
+      "weight": 1
+    },
+    {
+      "word": "black",
+      "weight": 1
+    },
+    {
+      "word": "white",
+      "weight": 1
+    },
+    {
+      "word": "blue",
+      "weight": 1
+    },
+    {
+      "word": "red",
+      "weight": 1
+    },
+    {
+      "word": "five",
+      "weight": 1
+    },
+    {
+      "word": "one",
+      "weight": 1
+    },
+    {
+      "word": "four",
+      "weight": 1
+    },
+    {
+      "word": "three",
+      "weight": 1
+    },
+    {
+      "word": "six",
+      "weight": 1
+    },
+    {
+      "word": "two",
+      "weight": 1
+    },
+    {
+      "word": "zero",
+      "weight": 1
+    },
+    {
+      "word": "seven",
+      "weight": 1
+    },
+    {
+      "word": "eight",
+      "weight": 1
+    },
+    {
+      "word": "eleven",
+      "weight": 1
+    },
+    {
+      "word": "ten",
+      "weight": 1
+    },
+    {
+      "word": "nine",
+      "weight": 1
+    },
+    {
+      "word": "twelve",
+      "weight": 1
+    },
+    {
+      "word": "apple",
+      "weight": 1
+    },
+    {
+      "word": "man",
+      "weight": 1
+    },
+    {
+      "word": "green",
+      "weight": 1
+    },
+    {
+      "word": "yellow",
+      "weight": 1
+    },
+    {
+      "word": "orange",
+      "weight": 1
+    },
+    {
+      "word": "woman",
+      "weight": 1
+    },
+    {
+      "word": "baby",
+      "weight": 1
+    },
+    {
+      "word": "big",
+      "weight": 1
+    },
+    {
+      "word": "small",
+      "weight": 1
+    },
+    {
+      "word": "box",
+      "weight": 1
+    },
+    {
+      "word": "book",
+      "weight": 1
+    },
+    {
+      "word": "bag",
+      "weight": 1
+    }
   ],
-  "Gimel": [    
-    {"word": "girl", "weight": 1},
-    {"word": "cat", "weight": 1},
-    {"word": "boy", "weight": 1},
-    {"word": "mom", "weight": 1},
-    {"word": "dog", "weight": 1},
-    {"word": "black", "weight": 1},
-    {"word": "white", "weight": 1},
-    {"word": "blue", "weight": 1},
-    {"word": "red", "weight": 1},
-    {"word": "five", "weight": 1},
-    {"word": "one", "weight": 1},
-    {"word": "four", "weight": 1},
-    {"word": "three", "weight": 1},
-    {"word": "six", "weight": 1},
-    {"word": "two", "weight": 1},
-    {"word": "zero", "weight": 1},
-    {"word": "seven", "weight": 1},
-    {"word": "eight", "weight": 1},
-    {"word": "eleven", "weight": 1},
-    {"word": "ten", "weight": 1},
-    {"word": "nine", "weight": 1},
-    {"word": "twelve", "weight": 1},
-    {"word": "apple", "weight": 1},
-    {"word": "man", "weight": 1},
-    {"word": "green", "weight": 1},
-    {"word": "yellow", "weight": 1},
-    {"word": "orange", "weight": 1},
-    {"word": "woman", "weight": 1},
-    {"word": "baby", "weight": 1},
-    {"word": "big", "weight": 1},
-    {"word": "small", "weight": 1},
-    {"word": "box", "weight": 1},
-    {"word": "book", "weight": 1},
-    {"word": "bag", "weight": 1},
-    {"word": "computer", "weight": 1},
-    {"word": "mouth", "weight": 1},
-    {"word": "sister", "weight": 1},
-    {"word": "nose", "weight": 1},
-    {"word": "notebook", "weight": 1},
-    {"word": "brother", "weight": 1},
-    {"word": "help", "weight": 1},
-    {"word": "sad", "weight": 1},
-    {"word": "bad", "weight": 1},
-    {"word": "dad", "weight": 1},
-    {"word": "duck", "weight": 1},
-    {"word": "desk", "weight": 1},
-    {"word": "house", "weight": 1},
-    {"word": "gift", "weight": 1},
-    {"word": "gray", "weight": 1},
-    {"word": "grandpa", "weight": 1},
-    {"word": "grandma", "weight": 1},
-    {"word": "do", "weight": 1},
-    {"word": "bed", "weight": 1},
-    {"word": "elephant", "weight": 1},
-    {"word": "table", "weight": 1},
-    {"word": "eraser", "weight": 1},
-    {"word": "egg", "weight": 1},
-    {"word": "pencil", "weight": 1},
-    {"word": "school", "weight": 1},
-    {"word": "plus", "weight": 1},
-    {"word": "hat", "weight": 1},
-    {"word": "pencil case", "weight": 1},
-    {"word": "add", "weight": 1},
-    {"word": "teacher", "weight": 1},
-    {"word": "pen", "weight": 1},
-    {"word": "test", "weight": 1},
-    {"word": "in", "weight": 1},
-    {"word": "on", "weight": 1},
-    {"word": "pupil", "weight": 1},
-    {"word": "picture", "weight": 1},
-    {"word": "chair", "weight": 1},
-    {"word": "lost", "weight": 1},
-    {"word": "ask", "weight": 1},
-    {"word": "play", "weight": 1},
-    {"word": "sing", "weight": 1},
-    {"word": "run", "weight": 1},
-    {"word": "rest", "weight": 1},
-    {"word": "hen", "weight": 1},
-    {"word": "rabbit", "weight": 1},
-    {"word": "best", "weight": 1}
+  "Gimel": [
+    {
+      "word": "girl",
+      "weight": 1
+    },
+    {
+      "word": "cat",
+      "weight": 1
+    },
+    {
+      "word": "boy",
+      "weight": 1
+    },
+    {
+      "word": "mom",
+      "weight": 1
+    },
+    {
+      "word": "dog",
+      "weight": 1
+    },
+    {
+      "word": "black",
+      "weight": 1
+    },
+    {
+      "word": "white",
+      "weight": 1
+    },
+    {
+      "word": "blue",
+      "weight": 1
+    },
+    {
+      "word": "red",
+      "weight": 1
+    },
+    {
+      "word": "five",
+      "weight": 1
+    },
+    {
+      "word": "one",
+      "weight": 1
+    },
+    {
+      "word": "four",
+      "weight": 1
+    },
+    {
+      "word": "three",
+      "weight": 1
+    },
+    {
+      "word": "six",
+      "weight": 1
+    },
+    {
+      "word": "two",
+      "weight": 1
+    },
+    {
+      "word": "zero",
+      "weight": 1
+    },
+    {
+      "word": "seven",
+      "weight": 1
+    },
+    {
+      "word": "eight",
+      "weight": 1
+    },
+    {
+      "word": "eleven",
+      "weight": 1
+    },
+    {
+      "word": "ten",
+      "weight": 1
+    },
+    {
+      "word": "nine",
+      "weight": 1
+    },
+    {
+      "word": "twelve",
+      "weight": 1
+    },
+    {
+      "word": "apple",
+      "weight": 1
+    },
+    {
+      "word": "man",
+      "weight": 1
+    },
+    {
+      "word": "green",
+      "weight": 1
+    },
+    {
+      "word": "yellow",
+      "weight": 1
+    },
+    {
+      "word": "orange",
+      "weight": 1
+    },
+    {
+      "word": "woman",
+      "weight": 1
+    },
+    {
+      "word": "baby",
+      "weight": 1
+    },
+    {
+      "word": "big",
+      "weight": 1
+    },
+    {
+      "word": "small",
+      "weight": 1
+    },
+    {
+      "word": "box",
+      "weight": 1
+    },
+    {
+      "word": "book",
+      "weight": 1
+    },
+    {
+      "word": "bag",
+      "weight": 1
+    },
+    {
+      "word": "computer",
+      "weight": 1
+    },
+    {
+      "word": "mouth",
+      "weight": 1
+    },
+    {
+      "word": "sister",
+      "weight": 1
+    },
+    {
+      "word": "nose",
+      "weight": 1
+    },
+    {
+      "word": "notebook",
+      "weight": 1
+    },
+    {
+      "word": "brother",
+      "weight": 1
+    },
+    {
+      "word": "help",
+      "weight": 1
+    },
+    {
+      "word": "sad",
+      "weight": 1
+    },
+    {
+      "word": "bad",
+      "weight": 1
+    },
+    {
+      "word": "dad",
+      "weight": 1
+    },
+    {
+      "word": "duck",
+      "weight": 1
+    },
+    {
+      "word": "desk",
+      "weight": 1
+    },
+    {
+      "word": "house",
+      "weight": 1
+    },
+    {
+      "word": "gift",
+      "weight": 1
+    },
+    {
+      "word": "gray",
+      "weight": 1
+    },
+    {
+      "word": "grandpa",
+      "weight": 1
+    },
+    {
+      "word": "grandma",
+      "weight": 1
+    },
+    {
+      "word": "do",
+      "weight": 1
+    },
+    {
+      "word": "bed",
+      "weight": 1
+    },
+    {
+      "word": "elephant",
+      "weight": 1
+    },
+    {
+      "word": "table",
+      "weight": 1
+    },
+    {
+      "word": "eraser",
+      "weight": 1
+    },
+    {
+      "word": "egg",
+      "weight": 1
+    },
+    {
+      "word": "pencil",
+      "weight": 1
+    },
+    {
+      "word": "school",
+      "weight": 1
+    },
+    {
+      "word": "plus",
+      "weight": 1
+    },
+    {
+      "word": "hat",
+      "weight": 1
+    },
+    {
+      "word": "pencil case",
+      "weight": 1
+    },
+    {
+      "word": "add",
+      "weight": 1
+    },
+    {
+      "word": "teacher",
+      "weight": 1
+    },
+    {
+      "word": "pen",
+      "weight": 1
+    },
+    {
+      "word": "test",
+      "weight": 1
+    },
+    {
+      "word": "in",
+      "weight": 1
+    },
+    {
+      "word": "on",
+      "weight": 1
+    },
+    {
+      "word": "pupil",
+      "weight": 1
+    },
+    {
+      "word": "picture",
+      "weight": 1
+    },
+    {
+      "word": "chair",
+      "weight": 1
+    },
+    {
+      "word": "lost",
+      "weight": 1
+    },
+    {
+      "word": "ask",
+      "weight": 1
+    },
+    {
+      "word": "play",
+      "weight": 1
+    },
+    {
+      "word": "sing",
+      "weight": 1
+    },
+    {
+      "word": "run",
+      "weight": 1
+    },
+    {
+      "word": "rest",
+      "weight": 1
+    },
+    {
+      "word": "hen",
+      "weight": 1
+    },
+    {
+      "word": "rabbit",
+      "weight": 1
+    },
+    {
+      "word": "best",
+      "weight": 1
+    },
+    {
+      "word": "hand",
+      "weight": 1
+    },
+    {
+      "word": "horse",
+      "weight": 1
+    },
+    {
+      "word": "happy",
+      "weight": 1
+    },
+    {
+      "word": "good",
+      "weight": 1
+    },
+    {
+      "word": "tall",
+      "weight": 1
+    },
+    {
+      "word": "fast",
+      "weight": 1
+    },
+    {
+      "word": "ball",
+      "weight": 1
+    }
   ],
   "numbers": [
-    {"word": "zero", "weight": 1},
-    {"word": "one", "weight": 1},
-    {"word": "two", "weight": 1},
-    {"word": "three", "weight": 1},
-    {"word": "four", "weight": 1},
-    {"word": "five", "weight": 1},
-    {"word": "six", "weight": 1},
-    {"word": "seven", "weight": 1},
-    {"word": "eight", "weight": 1},
-    {"word": "nine", "weight": 1},
-    {"word": "ten", "weight": 1},
-    {"word": "eleven", "weight": 1},
-    {"word": "twelve", "weight": 1}
+    {
+      "word": "zero",
+      "weight": 1
+    },
+    {
+      "word": "one",
+      "weight": 1
+    },
+    {
+      "word": "two",
+      "weight": 1
+    },
+    {
+      "word": "three",
+      "weight": 1
+    },
+    {
+      "word": "four",
+      "weight": 1
+    },
+    {
+      "word": "five",
+      "weight": 1
+    },
+    {
+      "word": "six",
+      "weight": 1
+    },
+    {
+      "word": "seven",
+      "weight": 1
+    },
+    {
+      "word": "eight",
+      "weight": 1
+    },
+    {
+      "word": "nine",
+      "weight": 1
+    },
+    {
+      "word": "ten",
+      "weight": 1
+    },
+    {
+      "word": "eleven",
+      "weight": 1
+    },
+    {
+      "word": "twelve",
+      "weight": 1
+    }
   ],
   "colors": [
-    {"word": "black", "weight": 1},
-    {"word": "white", "weight": 1},
-    {"word": "blue", "weight": 1},
-    {"word": "red", "weight": 1},
-    {"word": "green", "weight": 1},
-    {"word": "yellow", "weight": 1},
-    {"word": "orange", "weight": 1}
+    {
+      "word": "black",
+      "weight": 1
+    },
+    {
+      "word": "white",
+      "weight": 1
+    },
+    {
+      "word": "blue",
+      "weight": 1
+    },
+    {
+      "word": "red",
+      "weight": 1
+    },
+    {
+      "word": "green",
+      "weight": 1
+    },
+    {
+      "word": "yellow",
+      "weight": 1
+    },
+    {
+      "word": "orange",
+      "weight": 1
+    }
   ],
   "people": [
-    {"word": "girl", "weight": 1},
-    {"word": "boy", "weight": 1},
-    {"word": "mom", "weight": 1},
-    {"word": "man", "weight": 1},
-    {"word": "woman", "weight": 1},
-    {"word": "baby", "weight": 1},
-    {"word": "brother", "weight": 1},
-    {"word": "sister", "weight": 1}
+    {
+      "word": "girl",
+      "weight": 1
+    },
+    {
+      "word": "boy",
+      "weight": 1
+    },
+    {
+      "word": "mom",
+      "weight": 1
+    },
+    {
+      "word": "man",
+      "weight": 1
+    },
+    {
+      "word": "woman",
+      "weight": 1
+    },
+    {
+      "word": "baby",
+      "weight": 1
+    },
+    {
+      "word": "brother",
+      "weight": 1
+    },
+    {
+      "word": "sister",
+      "weight": 1
+    }
   ]
 }

@@ -36,6 +36,16 @@ def get_project_root():
     return Path(__file__).parent.parent
 
 
+def get_relative_path(path: Path) -> str:
+    """Convert absolute path to relative path from project root for display."""
+    try:
+        project_root = get_project_root()
+        return str(path.relative_to(project_root))
+    except ValueError:
+        # If path is not relative to project root, return as string
+        return str(path)
+
+
 def load_json_file(filepath: str) -> dict:
     """Load a JSON file."""
     with open(filepath, 'r', encoding='utf-8') as f:
@@ -167,8 +177,10 @@ if st.session_state.processed_data:
                 shared_images_dir = project_root / "shared" / "static" / "images"
                 shared_audio_dir = project_root / "shared" / "static" / "audio"
                 
-                # Log the save paths
-                st.info(f"📁 **Save Paths:**\n- Images: `{shared_images_dir}`\n- Audio: `{shared_audio_dir}`")
+                # Log the save paths (relative to project root)
+                rel_images_dir = get_relative_path(shared_images_dir)
+                rel_audio_dir = get_relative_path(shared_audio_dir)
+                st.info(f"📁 **Save Paths (relative to project root):**\n- Images: `{rel_images_dir}`\n- Audio: `{rel_audio_dir}`")
                 
                 shared_images_dir.mkdir(parents=True, exist_ok=True)
                 shared_audio_dir.mkdir(parents=True, exist_ok=True)
@@ -195,16 +207,19 @@ if st.session_state.processed_data:
                             saved_images += 1
                             
                             status = "✅ OVERWRITTEN" if existed_before else "✅ CREATED"
-                            log_msg = f"{status} Image: `{image_filename}`"
+                            rel_dst = get_relative_path(dst_image)
+                            log_msg = f"{status} Image: `{rel_dst}`"
                             if existed_before:
                                 log_msg += f" (old: {old_size} bytes → new: {dst_size} bytes)"
                             else:
                                 log_msg += f" ({dst_size} bytes)"
                             log_messages.append(log_msg)
                         except Exception as e:
-                            log_messages.append(f"❌ ERROR saving image `{image_filename}`: {e}")
+                            rel_dst = get_relative_path(dst_image)
+                            log_messages.append(f"❌ ERROR saving image `{rel_dst}`: {e}")
                     else:
-                        log_messages.append(f"⚠️ Source image not found: `{src_image}`")
+                        rel_src = get_relative_path(Path(src_image)) if os.path.exists(src_image) else src_image
+                        log_messages.append(f"⚠️ Source image not found: `{rel_src}`")
                     
                     # Copy audio (overwrites if exists)
                     audio_filename = sanitize_filename(word) + ".mp3"
@@ -223,23 +238,26 @@ if st.session_state.processed_data:
                             saved_audio += 1
                             
                             status = "✅ OVERWRITTEN" if existed_before else "✅ CREATED"
-                            log_msg = f"{status} Audio: `{audio_filename}`"
+                            rel_dst = get_relative_path(dst_audio)
+                            log_msg = f"{status} Audio: `{rel_dst}`"
                             if existed_before:
                                 log_msg += f" (old: {old_size} bytes → new: {dst_size} bytes)"
                             else:
                                 log_msg += f" ({dst_size} bytes)"
                             log_messages.append(log_msg)
                         except Exception as e:
-                            log_messages.append(f"❌ ERROR saving audio `{audio_filename}`: {e}")
+                            rel_dst = get_relative_path(dst_audio)
+                            log_messages.append(f"❌ ERROR saving audio `{rel_dst}`: {e}")
                     else:
-                        log_messages.append(f"⚠️ Source audio not found: `{src_audio}`")
+                        rel_src = get_relative_path(Path(src_audio)) if os.path.exists(src_audio) else src_audio
+                        log_messages.append(f"⚠️ Source audio not found: `{rel_src}`")
                 
                 # Display detailed log
                 with st.expander("📋 Detailed Save Log", expanded=True):
                     for msg in log_messages:
                         st.text(msg)
                 
-                st.success(f"✅ Saved {saved_images} image(s) and {saved_audio} audio file(s) to:\n- `{shared_images_dir}`\n- `{shared_audio_dir}`")
+                st.success(f"✅ Saved {saved_images} image(s) and {saved_audio} audio file(s) to:\n- `{rel_images_dir}`\n- `{rel_audio_dir}`")
                 
                 # Store accepted words for JSON update step
                 st.session_state.accepted_words = accepted_words
@@ -323,9 +341,11 @@ if st.session_state.accepted_words:
                         existed_before = dst_image.exists()
                         shutil.copy2(src_image, dst_image)
                         status = "OVERWRITTEN" if existed_before else "CREATED"
-                        log_messages.append(f"Image `{image_filename}`: {status}")
+                        rel_dst = get_relative_path(dst_image)
+                        log_messages.append(f"Image `{rel_dst}`: {status}")
                     else:
-                        log_messages.append(f"⚠️ Source image not found: `{src_image}`")
+                        rel_src = get_relative_path(Path(src_image)) if os.path.exists(src_image) else src_image
+                        log_messages.append(f"⚠️ Source image not found: `{rel_src}`")
                     
                     # Copy audio (overwrites if exists)
                     audio_filename = sanitize_filename(word) + ".mp3"
@@ -335,12 +355,16 @@ if st.session_state.accepted_words:
                         existed_before = dst_audio.exists()
                         shutil.copy2(src_audio, dst_audio)
                         status = "OVERWRITTEN" if existed_before else "CREATED"
-                        log_messages.append(f"Audio `{audio_filename}`: {status}")
+                        rel_dst = get_relative_path(dst_audio)
+                        log_messages.append(f"Audio `{rel_dst}`: {status}")
                     else:
-                        log_messages.append(f"⚠️ Source audio not found: `{src_audio}`")
+                        rel_src = get_relative_path(Path(src_audio)) if os.path.exists(src_audio) else src_audio
+                        log_messages.append(f"⚠️ Source audio not found: `{rel_src}`")
                 
                 if log_messages:
-                    st.info(f"Files saved to:\n- Images: `{shared_images_dir}`\n- Audio: `{shared_audio_dir}`")
+                    rel_images_dir = get_relative_path(shared_images_dir)
+                    rel_audio_dir = get_relative_path(shared_audio_dir)
+                    st.info(f"Files saved to:\n- Images: `{rel_images_dir}`\n- Audio: `{rel_audio_dir}`")
             
             # Update JSON files
             for app_name, config in json_updates.items():
@@ -348,7 +372,8 @@ if st.session_state.accepted_words:
                 group = config['group']
                 
                 if not filepath.exists():
-                    st.error(f"JSON file not found: {filepath}")
+                    rel_path = get_relative_path(filepath)
+                    st.error(f"JSON file not found: `{rel_path}`")
                     continue
                 
                 data = load_json_file(str(filepath))
