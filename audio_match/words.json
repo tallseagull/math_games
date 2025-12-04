@@ -343,10 +343,6 @@
       "weight": 1
     },
     {
-      "word": "do",
-      "weight": 1
-    },
-    {
       "word": "bed",
       "weight": 1
     },
@@ -484,6 +480,10 @@
     },
     {
       "word": "ball",
+      "weight": 1
+    },
+    {
+      "word": "door",
       "weight": 1
     }
   ],
