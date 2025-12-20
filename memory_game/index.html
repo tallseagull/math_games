@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Board Size Selection Screen -->
+    <div class="size-selection" id="sizeSelection">
+        <div class="size-content">
+            <h1 class="size-title">Memory Match</h1>
+            <p class="size-subtitle">Choose board size</p>
+            <div class="size-options">
+                <button class="size-button" data-size="40">40 Cards<br><span class="size-detail">20 pairs</span></button>
+                <button class="size-button" data-size="50">50 Cards<br><span class="size-detail">25 pairs</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Container -->
+    <div class="game-container" id="gameContainer" style="display: none;">
+        <!-- Header -->
+        <div class="header">
+            <a href="../golda/index.html" class="back-button">← Back</a>
+            <h1 class="game-title">Memory Match</h1>
+            <button id="restartButton" class="restart-button">🔄 Restart</button>
+        </div>
+
+        <!-- Scoreboard -->
+        <div class="scoreboard">
+            <div class="player-score" id="player1Score">
+                <div class="player-label">Player 1</div>
+                <div class="score-value" id="player1Points">0</div>
+            </div>
+            <div class="current-turn-indicator" id="turnIndicator">Player 1's Turn</div>
+            <div class="player-score" id="player2Score">
+                <div class="player-label">Player 2</div>
+                <div class="score-value" id="player2Points">0</div>
+            </div>
+        </div>
+
+        <!-- Game Board -->
+        <div class="game-area">
+            <div class="cards-grid" id="cardsGrid">
+                <!-- Cards will be dynamically created here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Overlay -->
+    <div class="game-over-overlay" id="gameOverOverlay" style="display: none;">
+        <div class="game-over-content">
+            <h2 class="game-over-title">Game Over!</h2>
+            <div class="final-scores">
+                <div class="final-score-item">
+                    <span class="final-score-label">Player 1:</span>
+                    <span class="final-score-value" id="finalPlayer1Score">0</span>
+                </div>
+                <div class="final-score-item">
+                    <span class="final-score-label">Player 2:</span>
+                    <span class="final-score-value" id="finalPlayer2Score">0</span>
+                </div>
+            </div>
+            <div class="winner-message" id="winnerMessage"></div>
+            <div class="game-over-buttons">
+                <button class="play-again-button" id="playAgainButton">Play Again</button>
+                <a href="../golda/index.html" class="back-to-menu-button">Back to Menu</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

@@ -212,6 +212,17 @@
                         </div>
                     </a>`;
             
+            if (gradeLabel === '3rd') {
+                gamesHTML += `
+                    <a href="../memory_game/index.html?category=${category}" class="grade-card">
+                        <span class="grade-icon">🧠</span>
+                        <div class="grade-title">Memory Match</div>
+                        <div class="grade-description">
+                            Find matching image pairs! Two-player memory game.
+                        </div>
+                    </a>`;
+            }
+            
             if (gradeLabel === '3rd' && connect4ImagesLink) {
                 gamesHTML += `
                     <a href="${connect4ImagesLink}" class="grade-card">
