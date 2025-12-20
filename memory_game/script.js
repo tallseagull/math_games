@@ -81,7 +81,7 @@ class MemoryGame {
 
     startGame(boardSize) {
         this.boardSize = boardSize;
-        const numPairs = boardSize / 2; // 20 or 25 pairs
+        const numPairs = boardSize / 2; // 16, 20, or 25 pairs
         
         // Check if we have enough images
         if (this.images.length < numPairs) {
@@ -150,12 +150,15 @@ class MemoryGame {
         this.cardsGrid.innerHTML = '';
         
         // Calculate optimal grid layout to fit all cards
-        // For 40 cards: 8 columns x 5 rows or 5 columns x 8 rows
-        // For 50 cards: 10 columns x 5 rows or 5 columns x 10 rows
+        // For 32 cards: 8 columns x 4 rows
+        // For 40 cards: 8 columns x 5 rows
+        // For 50 cards: 10 columns x 5 rows
         // We want to maximize use of available space (90% width, 100% height)
         let columns, rows;
-        if (this.boardSize === 40) {
-            // Try 8x5 first (wider layout)
+        if (this.boardSize === 32) {
+            columns = 8;
+            rows = 4;
+        } else if (this.boardSize === 40) {
             columns = 8;
             rows = 5;
         } else {
