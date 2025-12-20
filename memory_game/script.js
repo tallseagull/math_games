@@ -149,15 +149,23 @@ class MemoryGame {
     renderCards() {
         this.cardsGrid.innerHTML = '';
         
-        // Calculate grid columns based on board size
-        let columns;
+        // Calculate optimal grid layout to fit all cards
+        // For 40 cards: 8 columns x 5 rows or 5 columns x 8 rows
+        // For 50 cards: 10 columns x 5 rows or 5 columns x 10 rows
+        // We want to maximize use of available space (90% width, 100% height)
+        let columns, rows;
         if (this.boardSize === 40) {
-            columns = 8; // 5 rows x 8 columns
+            // Try 8x5 first (wider layout)
+            columns = 8;
+            rows = 5;
         } else {
-            columns = 10; // 5 rows x 10 columns
+            // 50 cards: 10x5
+            columns = 10;
+            rows = 5;
         }
         
         this.cardsGrid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+        this.cardsGrid.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
         
         this.cards.forEach((card, index) => {
             const cardElement = document.createElement('div');

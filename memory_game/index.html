@@ -21,28 +21,28 @@
 
     <!-- Game Container -->
     <div class="game-container" id="gameContainer" style="display: none;">
-        <!-- Header -->
-        <div class="header">
+        <!-- Left Sidebar (10% width) -->
+        <div class="sidebar">
             <a href="../golda/index.html" class="back-button">← Back</a>
-            <h1 class="game-title">Memory Match</h1>
-            <button id="restartButton" class="restart-button">🔄 Restart</button>
-        </div>
-
-        <!-- Scoreboard -->
-        <div class="scoreboard">
+            <h2 class="game-title">Memory Match</h2>
+            
             <div class="player-score" id="player1Score">
                 <div class="player-label">Player 1</div>
                 <div class="score-value" id="player1Points">0</div>
             </div>
+            
             <div class="current-turn-indicator" id="turnIndicator">Player 1's Turn</div>
+            
             <div class="player-score" id="player2Score">
                 <div class="player-label">Player 2</div>
                 <div class="score-value" id="player2Points">0</div>
             </div>
+            
+            <button id="restartButton" class="restart-button">🔄 Restart</button>
         </div>
 
-        <!-- Game Board -->
-        <div class="game-area">
+        <!-- Main Game Area (90% width) -->
+        <div class="main-area">
             <div class="cards-grid" id="cardsGrid">
                 <!-- Cards will be dynamically created here -->
             </div>
