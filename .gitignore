@@ -180,4 +180,5 @@ storybook-static/
 .turbo/
 
 # Python virtual environments
+venv/
 pdf_word_processor/venv/

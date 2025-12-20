@@ -2,3 +2,7 @@
 # This is a Python/Streamlit app, not needed for the frontend deployment
 pdf_word_processor/
 
+# Exclude pdf_generator from Netlify builds
+# This is a local Python script for generating PDFs, not needed for frontend deployment
+pdf_generator/
+
