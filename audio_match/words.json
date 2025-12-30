@@ -485,6 +485,34 @@
     {
       "word": "door",
       "weight": 1
+    },
+    {
+      "word": "sofa",
+      "weight": 1
+    },
+    {
+      "word": "sun",
+      "weight": 1
+    },
+    {
+      "word": "sunny",
+      "weight": 1
+    },
+    {
+      "word": "hot",
+      "weight": 1
+    },
+    {
+      "word": "cold",
+      "weight": 1
+    },
+    {
+      "word": "living room",
+      "weight": 1
+    },
+    {
+      "word": "farm",
+      "weight": 1
     }
   ],
   "numbers": [
