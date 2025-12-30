@@ -3,6 +3,8 @@ class MemoryGame {
         this.allCategories = {};
         this.currentCategory = 'Gimel';
         this.images = [];
+        this.letters = [];
+        this.gameType = null; // 'pictures' or 'letters'
         this.cards = [];
         this.selectedCards = [];
         this.currentPlayer = 1;
@@ -14,9 +16,11 @@ class MemoryGame {
         
         this.initializeElements();
         this.loadCategories();
+        this.loadLetters();
     }
 
     initializeElements() {
+        this.gameTypeSelection = document.getElementById('gameTypeSelection');
         this.sizeSelection = document.getElementById('sizeSelection');
         this.gameContainer = document.getElementById('gameContainer');
         this.cardsGrid = document.getElementById('cardsGrid');
@@ -31,6 +35,14 @@ class MemoryGame {
         this.winnerMessage = document.getElementById('winnerMessage');
         this.restartButton = document.getElementById('restartButton');
         this.playAgainButton = document.getElementById('playAgainButton');
+
+        // Game type selection buttons
+        document.querySelectorAll('.game-type-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const gameType = e.currentTarget.dataset.type;
+                this.selectGameType(gameType);
+            });
+        });
 
         // Size selection buttons
         document.querySelectorAll('.size-button').forEach(button => {
@@ -79,34 +91,95 @@ class MemoryGame {
         }
     }
 
-    startGame(boardSize) {
-        this.boardSize = boardSize;
-        const numPairs = boardSize / 2; // 16, 20, or 25 pairs
-        
-        // Check if we have enough images
-        if (this.images.length < numPairs) {
-            alert(`Not enough images in category. Need ${numPairs} but only have ${this.images.length}.`);
-            return;
+    async loadLetters() {
+        try {
+            const response = await fetch('config.json');
+            const data = await response.json();
+            this.letters = data.letters || [];
+            
+            if (this.letters.length === 0) {
+                console.error('No letters found in config');
+                // Fallback letters
+                this.letters = ['A', 'B', 'D', 'E', 'G', 'H', 'I', 'N', 'P', 'T'];
+            }
+        } catch (error) {
+            console.error('Error loading letters:', error);
+            // Fallback letters
+            this.letters = ['A', 'B', 'D', 'E', 'G', 'H', 'I', 'N', 'P', 'T'];
         }
+    }
+
+    selectGameType(gameType) {
+        this.gameType = gameType;
         
-        // Select random images
-        const selectedImages = this.getRandomImages(numPairs);
+        // Hide game type selection
+        this.gameTypeSelection.style.display = 'none';
         
-        // Create cards (2 cards per image)
-        this.cards = [];
-        selectedImages.forEach((imageName, index) => {
-            // Create two cards with the same image
-            this.cards.push({
-                id: `card-${index}-1`,
-                imageName: imageName,
-                state: 'hidden'
+        if (gameType === 'pictures') {
+            // Show size selection for picture game
+            this.sizeSelection.style.display = 'flex';
+        } else if (gameType === 'letters') {
+            // Skip size selection and start letter game directly
+            // Letter game uses all letters (20 cards, 10 pairs)
+            this.startGame(null);
+        }
+    }
+
+    startGame(boardSize) {
+        if (this.gameType === 'letters') {
+            // Letter game: use all letters, create uppercase/lowercase pairs
+            this.boardSize = this.letters.length * 2; // 20 cards for 10 letters
+            this.totalPairs = this.letters.length; // 10 pairs
+            
+            // Create cards (uppercase and lowercase for each letter)
+            this.cards = [];
+            this.letters.forEach((letter, index) => {
+                // Create uppercase card
+                this.cards.push({
+                    id: `letter-${index}-upper`,
+                    letter: letter.toUpperCase(),
+                    isUpperCase: true,
+                    state: 'hidden'
+                });
+                // Create lowercase card
+                this.cards.push({
+                    id: `letter-${index}-lower`,
+                    letter: letter.toLowerCase(),
+                    isUpperCase: false,
+                    state: 'hidden'
+                });
             });
-            this.cards.push({
-                id: `card-${index}-2`,
-                imageName: imageName,
-                state: 'hidden'
+        } else {
+            // Picture game: existing logic
+            this.boardSize = boardSize;
+            const numPairs = boardSize / 2; // 16, 20, or 25 pairs
+            
+            // Check if we have enough images
+            if (this.images.length < numPairs) {
+                alert(`Not enough images in category. Need ${numPairs} but only have ${this.images.length}.`);
+                return;
+            }
+            
+            // Select random images
+            const selectedImages = this.getRandomImages(numPairs);
+            this.totalPairs = numPairs;
+            
+            // Create cards (2 cards per image)
+            this.cards = [];
+            selectedImages.forEach((imageName, index) => {
+                // Create two cards with the same image
+                this.cards.push({
+                    id: `card-${index}-1`,
+                    imageName: imageName,
+                    state: 'hidden'
+                });
+                this.cards.push({
+                    id: `card-${index}-2`,
+                    imageName: imageName,
+                    state: 'hidden'
+                });
             });
-        });
+        }
         
         // Shuffle cards using Fisher-Yates
         this.shuffleCards();
@@ -115,7 +188,6 @@ class MemoryGame {
         this.selectedCards = [];
         this.currentPlayer = 1;
         this.scores = { 1: 0, 2: 0 };
-        this.totalPairs = numPairs;
         this.matchedPairs = 0;
         this.isProcessing = false;
         
@@ -153,7 +225,7 @@ class MemoryGame {
         // For 32 cards: 8 columns x 4 rows
         // For 40 cards: 8 columns x 5 rows
         // For 50 cards: 10 columns x 5 rows
-        // We want to maximize use of available space (90% width, 100% height)
+        // For 20 cards (letters): 5 columns x 4 rows
         let columns, rows;
         if (this.boardSize === 32) {
             columns = 8;
@@ -161,6 +233,10 @@ class MemoryGame {
         } else if (this.boardSize === 40) {
             columns = 8;
             rows = 5;
+        } else if (this.boardSize === 20) {
+            // Letter game: 5 columns x 4 rows
+            columns = 5;
+            rows = 4;
         } else {
             // 50 cards: 10x5
             columns = 10;
@@ -176,16 +252,29 @@ class MemoryGame {
             cardElement.dataset.cardId = card.id;
             cardElement.dataset.index = index;
             
-            cardElement.innerHTML = `
-                <div class="card-inner">
-                    <div class="card-face card-back"></div>
-                    <div class="card-face card-front">
-                        <img src="../shared/static/images/${card.imageName.replace(/ /g, '_')}.jpg" 
-                             alt="${card.imageName}" 
-                             onerror="this.parentElement.parentElement.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;font-size:24px;color:#ccc;\\'>❓</div>'">
+            if (this.gameType === 'letters') {
+                // Letter card: display letter text
+                cardElement.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-face card-back"></div>
+                        <div class="card-face card-front">
+                            <div class="letter-display">${card.letter}</div>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            } else {
+                // Picture card: display image
+                cardElement.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-face card-back"></div>
+                        <div class="card-face card-front">
+                            <img src="../shared/static/images/${card.imageName.replace(/ /g, '_')}.jpg" 
+                                 alt="${card.imageName}" 
+                                 onerror="this.parentElement.parentElement.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;font-size:24px;color:#ccc;\\'>❓</div>'">
+                        </div>
+                    </div>
+                `;
+            }
             
             cardElement.addEventListener('click', () => this.handleCardClick(index));
             
@@ -221,7 +310,20 @@ class MemoryGame {
         const firstCard = this.cards[first.index];
         const secondCard = this.cards[second.index];
         
-        if (firstCard.imageName === secondCard.imageName) {
+        let isMatch = false;
+        
+        if (this.gameType === 'letters') {
+            // Letter game: match uppercase to lowercase (same letter, different case)
+            const firstLetter = firstCard.letter.toUpperCase();
+            const secondLetter = secondCard.letter.toUpperCase();
+            isMatch = firstLetter === secondLetter && 
+                     firstCard.isUpperCase !== secondCard.isUpperCase;
+        } else {
+            // Picture game: match same image name
+            isMatch = firstCard.imageName === secondCard.imageName;
+        }
+        
+        if (isMatch) {
             // Match found!
             this.scores[this.currentPlayer]++;
             this.matchedPairs++;
@@ -302,11 +404,13 @@ class MemoryGame {
         // Hide game over overlay
         this.gameOverOverlay.style.display = 'none';
         
-        // Show size selection again
-        this.sizeSelection.style.display = 'flex';
+        // Show game type selection again
+        this.gameTypeSelection.style.display = 'flex';
+        this.sizeSelection.style.display = 'none';
         this.gameContainer.style.display = 'none';
         
         // Reset all state
+        this.gameType = null;
         this.cards = [];
         this.selectedCards = [];
         this.currentPlayer = 1;

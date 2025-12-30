@@ -7,8 +7,20 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Game Type Selection Screen -->
+    <div class="game-type-selection" id="gameTypeSelection">
+        <div class="game-type-content">
+            <h1 class="game-type-title">Memory Match</h1>
+            <p class="game-type-subtitle">Choose game type</p>
+            <div class="game-type-options">
+                <button class="game-type-button" data-type="pictures">Picture Game</button>
+                <button class="game-type-button" data-type="letters">Letter Game</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Board Size Selection Screen -->
-    <div class="size-selection" id="sizeSelection">
+    <div class="size-selection" id="sizeSelection" style="display: none;">
         <div class="size-content">
             <h1 class="size-title">Memory Match</h1>
             <p class="size-subtitle">Choose board size</p>

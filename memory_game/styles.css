@@ -14,6 +14,68 @@ body {
     padding: 0;
 }
 
+/* Game Type Selection Screen */
+.game-type-selection {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2001;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.game-type-content {
+    text-align: center;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.game-type-title {
+    color: white;
+    font-size: 48px;
+    margin-bottom: 10px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.game-type-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.game-type-options {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.game-type-button {
+    background: white;
+    border: none;
+    border-radius: 20px;
+    padding: 40px 60px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #667eea;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+}
+
+.game-type-button:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.game-type-button:active {
+    transform: translateY(-5px) scale(1.02);
+}
+
 /* Size Selection Screen */
 .size-selection {
     width: 100vw;
@@ -304,6 +366,19 @@ body {
     max-height: 100%;
 }
 
+.letter-display {
+    font-size: clamp(32px, 8vh, 72px);
+    font-weight: bold;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
 .memory-card:hover:not(.flipped):not(.matched) .card-back {
     transform: scale(1.05);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
@@ -493,19 +568,23 @@ body {
 }
 
 @media (max-width: 768px) {
+    .game-type-title,
     .size-title {
         font-size: 36px;
     }
     
+    .game-type-subtitle,
     .size-subtitle {
         font-size: 18px;
     }
     
+    .game-type-options,
     .size-options {
         flex-direction: column;
         gap: 20px;
     }
     
+    .game-type-button,
     .size-button {
         padding: 30px 40px;
         font-size: 24px;
@@ -576,6 +655,7 @@ body {
 }
 
 @media (max-width: 480px) {
+    .game-type-button,
     .size-button {
         padding: 25px 30px;
         font-size: 20px;
