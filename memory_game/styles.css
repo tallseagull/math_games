@@ -343,13 +343,16 @@ body {
 .card-back {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     border: 3px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.card-back::before {
-    content: '?';
+.card-number {
     font-size: clamp(16px, 3vh, 36px);
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.9);
     font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .card-front {

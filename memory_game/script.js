@@ -184,6 +184,11 @@ class MemoryGame {
         // Shuffle cards using Fisher-Yates
         this.shuffleCards();
         
+        // Assign unique numbers to each card (1, 2, 3, ...)
+        this.cards.forEach((card, index) => {
+            card.cardNumber = index + 1;
+        });
+        
         // Reset game state
         this.selectedCards = [];
         this.currentPlayer = 1;
@@ -256,7 +261,9 @@ class MemoryGame {
                 // Letter card: display letter text
                 cardElement.innerHTML = `
                     <div class="card-inner">
-                        <div class="card-face card-back"></div>
+                        <div class="card-face card-back">
+                            <div class="card-number">${card.cardNumber}</div>
+                        </div>
                         <div class="card-face card-front">
                             <div class="letter-display">${card.letter}</div>
                         </div>
@@ -266,7 +273,9 @@ class MemoryGame {
                 // Picture card: display image
                 cardElement.innerHTML = `
                     <div class="card-inner">
-                        <div class="card-face card-back"></div>
+                        <div class="card-face card-back">
+                            <div class="card-number">${card.cardNumber}</div>
+                        </div>
                         <div class="card-face card-front">
                             <img src="../shared/static/images/${card.imageName.replace(/ /g, '_')}.jpg" 
                                  alt="${card.imageName}" 
