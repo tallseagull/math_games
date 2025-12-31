@@ -230,7 +230,7 @@ class MemoryGame {
         // For 32 cards: 8 columns x 4 rows
         // For 40 cards: 8 columns x 5 rows
         // For 50 cards: 10 columns x 5 rows
-        // For 20 cards (letters): 5 columns x 4 rows
+        // For letter game: 6 columns x 4 rows (last row has fewer cards)
         let columns, rows;
         if (this.boardSize === 32) {
             columns = 8;
@@ -238,9 +238,9 @@ class MemoryGame {
         } else if (this.boardSize === 40) {
             columns = 8;
             rows = 5;
-        } else if (this.boardSize === 20) {
-            // Letter game: 5 columns x 4 rows
-            columns = 5;
+        } else if (this.gameType === 'letters') {
+            // Letter game: 6 columns x 4 rows (more square layout)
+            columns = 6;
             rows = 4;
         } else {
             // 50 cards: 10x5
@@ -251,7 +251,56 @@ class MemoryGame {
         this.cardsGrid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
         this.cardsGrid.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
         
+        // Add class for letter game styling
+        if (this.gameType === 'letters') {
+            this.cardsGrid.classList.add('letter-game');
+        } else {
+            this.cardsGrid.classList.remove('letter-game');
+        }
+        
+        // For letter game with incomplete last row, calculate where to insert empty divs
+        let leftEmptyDivs = [];
+        let rightEmptyDivs = [];
+        if (this.gameType === 'letters' && this.cards.length > 0) {
+            const totalCards = this.cards.length;
+            const cardsPerRow = 6;
+            const fullRows = Math.floor(totalCards / cardsPerRow);
+            const cardsInLastRow = totalCards % cardsPerRow;
+            
+            if (cardsInLastRow > 0 && cardsInLastRow < cardsPerRow) {
+                // Calculate empty cells needed to center the last row
+                const emptyCellsNeeded = cardsPerRow - cardsInLastRow;
+                const leftEmpty = Math.floor(emptyCellsNeeded / 2);
+                const rightEmpty = emptyCellsNeeded - leftEmpty;
+                
+                // Create empty divs to insert before and after the last row
+                for (let i = 0; i < leftEmpty; i++) {
+                    const emptyDiv = document.createElement('div');
+                    emptyDiv.className = 'grid-placeholder';
+                    leftEmptyDivs.push(emptyDiv);
+                }
+                for (let i = 0; i < rightEmpty; i++) {
+                    const emptyDiv = document.createElement('div');
+                    emptyDiv.className = 'grid-placeholder';
+                    rightEmptyDivs.push(emptyDiv);
+                }
+            }
+        }
+        
+        // Calculate where the last row starts
+        const cardsPerRow = this.gameType === 'letters' ? 6 : columns;
+        const fullRows = Math.floor(this.cards.length / cardsPerRow);
+        const lastRowStartIndex = fullRows * cardsPerRow;
+        const lastRowEndIndex = this.cards.length - 1;
+        
         this.cards.forEach((card, index) => {
+            // Insert left empty divs before the last row starts
+            if (this.gameType === 'letters' && index === lastRowStartIndex && leftEmptyDivs.length > 0) {
+                leftEmptyDivs.forEach(emptyDiv => {
+                    this.cardsGrid.appendChild(emptyDiv);
+                });
+            }
+            
             const cardElement = document.createElement('div');
             cardElement.className = 'memory-card';
             cardElement.dataset.cardId = card.id;
@@ -288,6 +337,13 @@ class MemoryGame {
             cardElement.addEventListener('click', () => this.handleCardClick(index));
             
             this.cardsGrid.appendChild(cardElement);
+            
+            // Insert right empty divs after the last card of the last row
+            if (this.gameType === 'letters' && index === lastRowEndIndex && rightEmptyDivs.length > 0) {
+                rightEmptyDivs.forEach(emptyDiv => {
+                    this.cardsGrid.appendChild(emptyDiv);
+                });
+            }
         });
     }
 

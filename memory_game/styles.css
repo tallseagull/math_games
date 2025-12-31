@@ -290,8 +290,19 @@ body {
     padding: 6px;
     box-sizing: border-box;
     align-content: stretch;
-    justify-content: stretch;
+    justify-content: center;
     overflow: hidden;
+}
+
+.cards-grid.letter-game {
+    /* For letter game, center items in their grid cells for better appearance */
+    justify-items: center;
+}
+
+.grid-placeholder {
+    /* Empty placeholder divs to help center incomplete rows */
+    visibility: hidden;
+    pointer-events: none;
 }
 
 /* Card Styles */
