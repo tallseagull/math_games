@@ -349,7 +349,7 @@ body {
 }
 
 .card-number {
-    font-size: clamp(16px, 3vh, 36px);
+    font-size: clamp(24px, 5vh, 56px);
     color: rgba(255, 255, 255, 0.9);
     font-weight: bold;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);

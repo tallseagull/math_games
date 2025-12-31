@@ -183,6 +183,12 @@ class DiceWordGame {
         this.rollButton.disabled = true;
         this.wordDisplay.style.display = 'none';
         
+        // Reassign letters to dice faces randomly for this roll
+        // This happens before the roll animation so dice don't change after showing the word
+        this.assignLettersToDice();
+        // Update the dice faces with new letters (before rolling)
+        this.updateDiceFaces();
+        
         // Play dice roll sound
         this.playDiceRollSound();
         
@@ -253,11 +259,6 @@ class DiceWordGame {
         
         // Display word
         this.displayWord(word);
-        
-        // Reassign letters to dice faces randomly for the next roll
-        this.assignLettersToDice();
-        // Update the dice faces with new letters (but keep current rotation)
-        this.updateDiceFaces();
         
         // Re-enable roll button
         this.isRolling = false;
