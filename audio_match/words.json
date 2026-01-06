@@ -513,6 +513,34 @@
     {
       "word": "farm",
       "weight": 1
+    },
+    {
+      "word": "mouse",
+      "weight": 1
+    },
+    {
+      "word": "sheep",
+      "weight": 1
+    },
+    {
+      "word": "tree",
+      "weight": 1
+    },
+    {
+      "word": "friend",
+      "weight": 1
+    },
+    {
+      "word": "job",
+      "weight": 1
+    },
+    {
+      "word": "soft",
+      "weight": 1
+    },
+    {
+      "word": "fun",
+      "weight": 1
     }
   ],
   "numbers": [
