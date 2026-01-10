@@ -62,10 +62,25 @@ function populateWordListSelector() {
     const urlParams = new URLSearchParams(window.location.search);
     const gradeParam = urlParams.get('grade');
     const listKeyParam = urlParams.get('listKey');
+    const unitParam = urlParams.get('unit');
+    const gameParam = urlParams.get('game');
     
     if (listKeyParam && gameState.wordLists[listKeyParam]) {
-        selectWordList(listKeyParam);
+        selectWordList(listKeyParam, gameParam);
         return;
+    }
+    
+    if (unitParam) {
+        // Map unit parameter to word list key
+        const unitMap = {
+            '1': '4th_grade_unit1',
+            '2': '4th_grade_unit2'
+        };
+        const listKey = unitMap[unitParam];
+        if (listKey && gameState.wordLists[listKey]) {
+            selectWordList(listKey, gameParam);
+            return;
+        }
     }
     
     if (gradeParam) {
@@ -76,7 +91,7 @@ function populateWordListSelector() {
         };
         const listKey = gradeMap[gradeParam];
         if (listKey && gameState.wordLists[listKey]) {
-            selectWordList(listKey);
+            selectWordList(listKey, gameParam);
             return;
         }
     }
@@ -104,7 +119,7 @@ function populateWordListSelector() {
 }
 
 // Handle word list selection
-async function selectWordList(listKey) {
+async function selectWordList(listKey, gameParam = null) {
     gameState.selectedListKey = listKey;
     const list = gameState.wordLists[listKey];
     
@@ -121,6 +136,21 @@ async function selectWordList(listKey) {
     } else {
         gameState.isImageMode = false;
         gameState.words = list.words || [];
+    }
+    
+    // If game parameter is provided, start the game directly
+    if (gameParam) {
+        if (gameParam === 'tic-tac-toe') {
+            startGame(3, 3, 3);
+            return;
+        } else if (gameParam === 'connect4') {
+            // Check if we need to supplement words for Connect 4 (needs 42 words)
+            if (listKey === '4th_grade_unit2' && gameState.words.length < 42) {
+                supplementWordsForConnect4();
+            }
+            startGame(6, 7, 4);
+            return;
+        }
     }
     
     // Hide word list selector, show game mode selection
@@ -158,6 +188,13 @@ function startGame(rows, cols, connectN) {
     gameState.gameOver = false;
     gameState.board = Array(rows).fill(null).map(() => Array(cols).fill(null));
     
+    // Check if we need to supplement words for Connect 4 with Unit 2
+    if (rows === 6 && cols === 7 && connectN === 4 && gameState.selectedListKey === '4th_grade_unit2') {
+        if (gameState.words.length < 42) {
+            supplementWordsForConnect4();
+        }
+    }
+    
     // Select random unique words
     selectRandomWords(rows * cols);
     
@@ -175,6 +212,27 @@ function startGame(rows, cols, connectN) {
     // Create the game board
     createBoard();
     updatePlayerIndicator();
+}
+
+// Supplement Unit 2 words with Unit 1 words if needed for Connect 4
+function supplementWordsForConnect4() {
+    if (gameState.selectedListKey !== '4th_grade_unit2') {
+        return; // Only supplement for Unit 2
+    }
+    
+    const unit2Words = [...gameState.words];
+    const neededWords = 42 - unit2Words.length;
+    
+    if (neededWords > 0 && gameState.wordLists['4th_grade_unit1']) {
+        const unit1Words = gameState.wordLists['4th_grade_unit1'].words || [];
+        // Filter out words that are already in Unit 2 to avoid duplicates
+        const availableUnit1Words = unit1Words.filter(word => !unit2Words.includes(word));
+        // Shuffle and take needed amount
+        const shuffled = [...availableUnit1Words].sort(() => Math.random() - 0.5);
+        const supplementWords = shuffled.slice(0, neededWords);
+        // Combine Unit 2 words with supplemented Unit 1 words
+        gameState.words = [...unit2Words, ...supplementWords];
+    }
 }
 
 // Select random unique words from the word list

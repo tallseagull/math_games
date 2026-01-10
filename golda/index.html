@@ -85,6 +85,53 @@
             line-height: 1.5;
         }
 
+        .unit-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .unit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .unit-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .game-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .game-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .game-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
         .back-button {
             margin-top: 30px;
             padding: 10px 20px;
@@ -166,8 +213,8 @@
                 // Show game selection for 3rd grade
                 showGameSelection('3rd', 'Gimel');
             } else if (grade === '4th') {
-                // Redirect to connect4 with 4th grade words
-                window.location.href = '../connect4_words/index.html?grade=4th';
+                // Show unit selection for 4th grade
+                showUnitSelection();
             } else if (grade === '5th') {
                 // Redirect to connect4 with 5th grade words
                 window.location.href = '../connect4_words/index.html?grade=5th';
@@ -241,6 +288,44 @@
             `;
             
             container.innerHTML = gamesHTML;
+        }
+
+        function showUnitSelection() {
+            const container = document.querySelector('.container');
+            const unitsHTML = `
+                <h1>🏫 Golda - 4th Grade</h1>
+                <p class="subtitle">Select a unit and game</p>
+                
+                <div class="grades-grid">
+                    <div class="unit-card">
+                        <div class="unit-title">Unit 1</div>
+                        <div class="game-buttons">
+                            <a href="../connect4_words/index.html?unit=1&game=tic-tac-toe" class="game-button">
+                                Tic-Tac-Toe
+                            </a>
+                            <a href="../connect4_words/index.html?unit=1&game=connect4" class="game-button">
+                                Connect 4
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="unit-card">
+                        <div class="unit-title">Unit 2</div>
+                        <div class="game-buttons">
+                            <a href="../connect4_words/index.html?unit=2&game=tic-tac-toe" class="game-button">
+                                Tic-Tac-Toe
+                            </a>
+                            <a href="../connect4_words/index.html?unit=2&game=connect4" class="game-button">
+                                Connect 4
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="index.html" class="back-button">← Back to Grade Selection</a>
+            `;
+            
+            container.innerHTML = unitsHTML;
         }
     </script>
 </body>
