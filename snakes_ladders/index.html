@@ -9,6 +9,22 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-gradient-to-br from-purple-600 to-purple-800 h-screen overflow-hidden">
+    <!-- Unit Selection Screen (for 4th grade) -->
+    <div id="unitSelection" class="unit-selection hidden fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-purple-600 to-purple-800">
+        <div class="text-center">
+            <h1 class="text-5xl font-bold text-white mb-4 drop-shadow-lg">Snakes & Ladders</h1>
+            <p class="text-xl text-white mb-8">Choose a unit</p>
+            <div class="flex gap-6 justify-center">
+                <button data-unit="1" class="unit-button bg-white text-purple-600 px-12 py-6 rounded-xl text-2xl font-bold shadow-lg hover:shadow-xl transition-all hover:scale-105">
+                    Unit 1
+                </button>
+                <button data-unit="2" class="unit-button bg-white text-purple-600 px-12 py-6 rounded-xl text-2xl font-bold shadow-lg hover:shadow-xl transition-all hover:scale-105">
+                    Unit 2
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="container mx-auto p-4 h-screen flex flex-col overflow-hidden">
         <!-- Header with back link -->
         <div class="mb-4 flex-shrink-0">
@@ -77,8 +93,11 @@
     <div id="challengeModal" class="challenge-modal hidden">
         <div class="modal-content bg-white rounded-lg shadow-2xl p-8 max-w-2xl">
             <h3 class="text-2xl font-bold text-center mb-6 text-gray-800">Vocabulary Challenge</h3>
-            <div class="challenge-image-container mb-6">
+            <div class="challenge-image-container mb-6" id="challengeImageContainer">
                 <img id="challengeImage" src="" alt="Vocabulary challenge" class="challenge-image mx-auto rounded-lg shadow-md">
+            </div>
+            <div class="challenge-word-container mb-6 hidden" id="challengeWordContainer">
+                <div id="challengeWord" class="text-6xl font-bold text-center text-gray-800 p-8 bg-gray-100 rounded-lg"></div>
             </div>
             <div class="challenge-buttons flex gap-6 justify-center">
                 <button id="correctBtn" class="correct-btn bg-green-500 hover:bg-green-600 text-white font-bold py-6 px-12 rounded-lg text-4xl shadow-lg transition-all">

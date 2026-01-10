@@ -8,6 +8,8 @@ let gameState = {
     snakes: [],
     ladders: [],
     vocabularyImages: [],
+    vocabularyWords: [],
+    useWords: false, // true for 4th grade words, false for images
     gameOver: false,
     diceValue: 0,
     diceBox: null,
@@ -21,9 +23,10 @@ const TOTAL_TILES = 60;
 
 // DOM elements
 let gameBoard, diceContainer, sidebarDiceContainer, challengeModal, challengeImage;
+let challengeImageContainer, challengeWordContainer, challengeWord;
 let rollDiceBtn, correctBtn, incorrectBtn, newGameBtn, playAgainBtn;
 let currentTurnEl, turnIndicator, teamAPositionEl, teamBPositionEl, teamAInfo, teamBInfo;
-let winnerOverlay, winnerText;
+let winnerOverlay, winnerText, unitSelection;
 
 // Set back link based on URL parameters
 function setupBackLink() {
@@ -56,6 +59,9 @@ async function init() {
     sidebarDiceContainer = document.getElementById('sidebarDiceContainer');
     challengeModal = document.getElementById('challengeModal');
     challengeImage = document.getElementById('challengeImage');
+    challengeImageContainer = document.getElementById('challengeImageContainer');
+    challengeWordContainer = document.getElementById('challengeWordContainer');
+    challengeWord = document.getElementById('challengeWord');
     rollDiceBtn = document.getElementById('rollDiceBtn');
     correctBtn = document.getElementById('correctBtn');
     incorrectBtn = document.getElementById('incorrectBtn');
@@ -69,10 +75,68 @@ async function init() {
     teamBInfo = document.getElementById('teamBInfo');
     winnerOverlay = document.getElementById('winnerOverlay');
     winnerText = document.getElementById('winnerText');
+    unitSelection = document.getElementById('unitSelection');
 
-    // Load vocabulary images
-    await loadVocabularyImages();
+    // Check if 4th grade with unit parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const unit = urlParams.get('unit');
+    const grade = urlParams.get('grade');
+    
+    if (grade === '4th' || unit) {
+        // Show unit selection
+        if (unitSelection) {
+            unitSelection.classList.remove('hidden');
+            setupUnitSelection();
+            return; // Don't load game until unit is selected
+        }
+    } else {
+        // Load vocabulary images (3rd grade mode)
+        await loadVocabularyImages();
+    }
+}
 
+// Setup unit selection
+function setupUnitSelection() {
+    const unitButtons = unitSelection.querySelectorAll('.unit-button');
+    unitButtons.forEach(button => {
+        button.addEventListener('click', async (e) => {
+            const unitNum = e.target.getAttribute('data-unit');
+            unitSelection.classList.add('hidden');
+            await loadUnitWords(unitNum);
+        });
+    });
+}
+
+// Load vocabulary words from words.json for 4th grade
+async function loadUnitWords(unitNum) {
+    try {
+        const response = await fetch('../connect4_words/words.json');
+        const data = await response.json();
+        
+        const unitKey = `4th_grade_unit${unitNum}`;
+        if (data.wordLists && data.wordLists[unitKey] && data.wordLists[unitKey].words) {
+            const words = data.wordLists[unitKey].words;
+            // Filter out phrases, keep only single words
+            gameState.vocabularyWords = words.filter(word => {
+                return word && !word.includes(' ') && !word.includes('?') && !word.includes('…') && !word.includes('.');
+            });
+            gameState.useWords = true;
+        } else {
+            // Fallback to images
+            await loadVocabularyImages();
+        }
+    } catch (error) {
+        console.error('Error loading unit words:', error);
+        // Fallback to images
+        await loadVocabularyImages();
+    }
+    
+    // Continue game initialization
+    await continueGameInit();
+}
+
+// Continue game initialization after unit/words are loaded
+async function continueGameInit() {
     // Initialize dice box
     await initDiceBox();
 
@@ -104,6 +168,7 @@ async function loadVocabularyImages() {
         const response = await fetch('images.json');
         const data = await response.json();
         gameState.vocabularyImages = data.images || [];
+        gameState.useWords = false;
     } catch (error) {
         console.error('Error loading vocabulary images:', error);
         // Fallback to placeholder images
@@ -111,7 +176,11 @@ async function loadVocabularyImages() {
             word: `word${i + 1}`,
             url: `../shared/static/images/apple.jpg`
         }));
+        gameState.useWords = false;
     }
+    
+    // Continue game initialization
+    await continueGameInit();
 }
 
 // Initialize CSS-based 3D dice with dots
@@ -667,19 +736,42 @@ async function handleRollDice() {
 
 // Show vocabulary challenge modal
 function showChallengeModal() {
-    if (gameState.vocabularyImages.length === 0) {
-        // No images available, skip challenge
-        handleChallengeAnswer(true);
-        return;
-    }
+    if (gameState.useWords) {
+        // Use words mode (4th grade)
+        if (gameState.vocabularyWords.length === 0) {
+            // No words available, skip challenge
+            handleChallengeAnswer(true);
+            return;
+        }
+        
+        // Select random word
+        const randomIndex = Math.floor(Math.random() * gameState.vocabularyWords.length);
+        const selectedWord = gameState.vocabularyWords[randomIndex];
+        
+        // Show word container, hide image container
+        challengeImageContainer.classList.add('hidden');
+        challengeWordContainer.classList.remove('hidden');
+        challengeWord.textContent = selectedWord;
+        challengeModal.classList.remove('hidden');
+    } else {
+        // Use images mode (3rd grade)
+        if (gameState.vocabularyImages.length === 0) {
+            // No images available, skip challenge
+            handleChallengeAnswer(true);
+            return;
+        }
 
-    // Select random image
-    const randomIndex = Math.floor(Math.random() * gameState.vocabularyImages.length);
-    const selectedImage = gameState.vocabularyImages[randomIndex];
-    
-    challengeImage.src = selectedImage.url;
-    challengeImage.alt = selectedImage.word;
-    challengeModal.classList.remove('hidden');
+        // Select random image
+        const randomIndex = Math.floor(Math.random() * gameState.vocabularyImages.length);
+        const selectedImage = gameState.vocabularyImages[randomIndex];
+        
+        // Show image container, hide word container
+        challengeWordContainer.classList.add('hidden');
+        challengeImageContainer.classList.remove('hidden');
+        challengeImage.src = selectedImage.url;
+        challengeImage.alt = selectedImage.word;
+        challengeModal.classList.remove('hidden');
+    }
 }
 
 // Handle challenge answer

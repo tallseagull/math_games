@@ -34,15 +34,20 @@ class PictureRevealGame {
         ];
 
         this.coverCardsList = [];
+        this.coverWordsList = []; // For 4th grade words mode
+        this.useWords = false; // true for 4th grade, false for images
         this.selectedImageIndex = null;
         this.flippedTiles = new Set();
         this.category = null;
+        this.unit = null;
+        this.grade = null;
         
         this.initializeElements();
-        this.loadCategoryImages();
+        this.checkGradeAndLoad();
     }
 
     initializeElements() {
+        this.unitSelection = document.getElementById('unitSelection');
         this.imageSelection = document.getElementById('imageSelection');
         this.gameContainer = document.getElementById('gameContainer');
         this.mainGrid = document.getElementById('mainGrid');
@@ -50,6 +55,62 @@ class PictureRevealGame {
         this.backLink = document.getElementById('backLink');
         this.revealAllButton = document.getElementById('revealAllButton');
         this.allTiles = [];
+    }
+
+    checkGradeAndLoad() {
+        const urlParams = new URLSearchParams(window.location.search);
+        this.grade = urlParams.get('grade');
+        this.unit = urlParams.get('unit');
+        
+        // If unit is specified in URL (from 4th grade selection), load words directly
+        if (this.unit) {
+            // Unit already selected, load words and show image selection
+            this.unitSelection.style.display = 'none';
+            this.loadUnitWords();
+        } else {
+            // Otherwise, load category images (for 3rd grade) or default
+            this.loadCategoryImages();
+        }
+    }
+
+    async loadUnitWords() {
+        try {
+            // Load words.json from connect4_words folder (same source as connect4_words game)
+            const response = await fetch('../connect4_words/words.json');
+            const data = await response.json();
+            
+            const unitKey = `4th_grade_unit${this.unit}`;
+            if (data.wordLists && data.wordLists[unitKey] && data.wordLists[unitKey].words) {
+                // Use ALL words from the unit (same as connect4_words uses)
+                const allWords = data.wordLists[unitKey].words;
+                
+                // Filter out only question phrases and very long sentences, but keep multi-word phrases
+                const validWords = allWords.filter(word => {
+                    if (!word || word.trim() === '') return false;
+                    // Exclude question phrases and very long sentences
+                    if (word.includes('?') || word.includes('…') || word.length > 30) return false;
+                    return true;
+                });
+                
+                // Randomly select 20 words (or all if less than 20)
+                const shuffled = this.shuffleArray([...validWords]);
+                const selectedWords = shuffled.slice(0, 20);
+                
+                // Store words directly (not image paths) for 4th grade
+                this.coverWordsList = selectedWords;
+                this.useWords = true;
+            } else {
+                // Fallback to default images
+                this.coverCardsList = [...this.defaultCoverCardsList];
+            }
+        } catch (error) {
+            console.error('Error loading unit words:', error);
+            // Fallback to default images
+            this.coverCardsList = [...this.defaultCoverCardsList];
+        }
+        
+        // Setup event listeners after words are loaded
+        this.setupEventListeners();
     }
 
     async loadCategoryImages() {
@@ -106,8 +167,15 @@ class PictureRevealGame {
     }
 
     setupEventListeners() {
-        // Image selection buttons
-        this.imageOptions.forEach(button => {
+        // Image selection buttons (only for image selection screen, not unit selection)
+        const imageSelectionButtons = this.imageSelection.querySelectorAll('.image-option[data-image]');
+        imageSelectionButtons.forEach(button => {
+            // Remove existing listeners to avoid duplicates
+            button.replaceWith(button.cloneNode(true));
+        });
+        // Re-query after cloning
+        const freshButtons = this.imageSelection.querySelectorAll('.image-option[data-image]');
+        freshButtons.forEach(button => {
             button.addEventListener('click', (e) => {
                 const imageIndex = parseInt(e.target.getAttribute('data-image')) - 1;
                 this.selectImage(imageIndex);
@@ -190,13 +258,58 @@ class PictureRevealGame {
         const cardInner = document.createElement('div');
         cardInner.className = 'card-inner';
 
-        // Create front face (vocabulary image)
+        // Create front face (vocabulary image or word)
         const cardFront = document.createElement('div');
         cardFront.className = 'card-front';
-        const frontImg = document.createElement('img');
-        frontImg.src = this.coverCardsList[index];
-        frontImg.alt = `Vocabulary card ${index + 1}`;
-        cardFront.appendChild(frontImg);
+        
+        if (this.useWords && this.coverWordsList[index]) {
+            // 4th grade mode: display word as text
+            const wordElement = document.createElement('div');
+            wordElement.className = 'card-word';
+            const word = this.coverWordsList[index];
+            wordElement.textContent = word;
+            
+            // Adjust font size based on word/phrase length
+            // Card dimensions: 160px width, 150px height (with 8px padding = 144px usable)
+            const wordLength = word.length;
+            const hasSpace = word.includes(' '); // Check if it's a multi-word phrase
+            let fontSize;
+            
+            // For multi-word phrases (with spaces), allow 2-line wrapping but use smaller font
+            if (hasSpace) {
+                // Multi-word phrases can wrap to 2 lines at spaces, use smaller font
+                if (wordLength > 20) {
+                    fontSize = '1.4rem'; // Very long phrases
+                } else if (wordLength > 15) {
+                    fontSize = '1.6rem'; // Medium-long phrases
+                } else {
+                    fontSize = '1.8rem'; // Short multi-word phrases
+                }
+            } else {
+                // Single words - single line, adjust based on length
+                if (wordLength > 15) {
+                    fontSize = '1.2rem';
+                } else if (wordLength > 12) {
+                    fontSize = '1.5rem';
+                } else if (wordLength > 9) {
+                    fontSize = '1.8rem';
+                } else if (wordLength > 6) {
+                    fontSize = '2.2rem';
+                } else {
+                    fontSize = '2.5rem';
+                }
+            }
+            
+            wordElement.style.fontSize = fontSize;
+            
+            cardFront.appendChild(wordElement);
+        } else {
+            // 3rd grade mode: display image
+            const frontImg = document.createElement('img');
+            frontImg.src = this.coverCardsList[index];
+            frontImg.alt = `Vocabulary card ${index + 1}`;
+            cardFront.appendChild(frontImg);
+        }
 
         // Create back face (transparent to show background)
         const cardBack = document.createElement('div');

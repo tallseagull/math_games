@@ -14,6 +14,20 @@ body {
     padding: 20px;
 }
 
+/* Unit Selection Screen (for 4th grade) */
+.unit-selection {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
 /* Image Selection Screen */
 .image-selection {
     width: 100%;
@@ -235,6 +249,51 @@ body {
     height: 100%;
     object-fit: contain;
     object-position: center;
+}
+
+/* Card Word (for 4th grade) - matches connect4_words styling */
+.card-word {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    word-wrap: break-word;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    white-space: normal; /* Allow wrapping only at spaces */
+    overflow-wrap: break-word;
+    hyphens: none; /* Don't add hyphens */
+}
+
+/* Responsive font sizing for card words */
+@media (max-width: 1400px) {
+    .card-word {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .card-word {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .card-word {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .card-word {
+        font-size: 1.2rem;
+    }
 }
 
 /* Card Back (Transparent to show background) */
