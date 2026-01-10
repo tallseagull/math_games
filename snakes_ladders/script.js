@@ -93,6 +93,8 @@ async function init() {
         // Load vocabulary images (3rd grade mode)
         await loadVocabularyImages();
     }
+    
+    console.log('Game initialization complete. Grade:', grade, 'Unit:', unit);
 }
 
 // Setup unit selection
@@ -324,22 +326,26 @@ function startNewGame() {
 }
 
 // Helper function to get row and column from tile number
+// Board starts at bottom (row 5 = bottom, row 0 = top)
 function getTileRowCol(tileNumber) {
-    const row = Math.floor((tileNumber - 1) / BOARD_COLS);
-    const col = (row % 2 === 0) 
+    const logicalRow = Math.floor((tileNumber - 1) / BOARD_COLS);
+    const visualRow = BOARD_ROWS - 1 - logicalRow; // Reverse: bottom row (5) = logical row 0
+    const col = (logicalRow % 2 === 0) 
         ? (tileNumber - 1) % BOARD_COLS
         : BOARD_COLS - 1 - ((tileNumber - 1) % BOARD_COLS);
-    return { row, col };
+    return { row: visualRow, col };
 }
 
 // Helper function to get tile number from row and column
+// Board starts at bottom (row 5 = bottom, row 0 = top)
 function getTileNumber(row, col) {
-    if (row % 2 === 0) {
+    const logicalRow = BOARD_ROWS - 1 - row; // Reverse: visual row 5 = logical row 0
+    if (logicalRow % 2 === 0) {
         // Left to right
-        return row * BOARD_COLS + col + 1;
+        return logicalRow * BOARD_COLS + col + 1;
     } else {
         // Right to left
-        return (row + 1) * BOARD_COLS - col;
+        return (logicalRow + 1) * BOARD_COLS - col;
     }
 }
 
@@ -354,94 +360,166 @@ function generateSnakesAndLadders() {
 
     // Pre-generate all valid pairs to ensure we can find enough
     // Constraint: snakes and ladders must go exactly one row up/down in the same column
-    // With zigzag pattern: one row DOWN = ladders (tile number increases)
-    //                      one row UP = snakes (tile number decreases)
+    // With zigzag pattern: one row DOWN visually = ladders (tile number increases)
+    //                      one row UP visually = snakes (tile number decreases)
     const allLadderPairs = [];
     const allSnakePairs = [];
     
-    // Find all valid ladder pairs (one row DOWN, same column, end > start)
-    // Ladders go down one row visually (row N -> row N+1), but tile number increases
-    for (let startRow = 0; startRow < BOARD_ROWS - 1; startRow++) {
+    // Find all valid ladder pairs
+    // With reversed board: visual row 5 (bottom) = tiles 1-10, visual row 0 (top) = tiles 51-60
+    // Ladders go UP visually (row N+1 -> row N) to increase tile numbers
+    // Example: row 5 -> row 4 means tiles 1-10 -> tiles 11-20 (ladder up)
+    for (let startRow = 1; startRow < BOARD_ROWS; startRow++) {
         for (let col = 0; col < BOARD_COLS; col++) {
             const start = getTileNumber(startRow, col);
-            const endRow = startRow + 1; // One row down visually
+            const endRow = startRow - 1; // One row up visually (toward top)
             const end = getTileNumber(endRow, col);
             
             // Ladder must go up in tile numbers (end > start)
             // Cannot end on tile 60 (last square)
             // Cannot start on tile 1 (starting position)
             if (end > start && end < TOTAL_TILES && start > 1) {
-                allLadderPairs.push({ start, end });
+                allLadderPairs.push({ start, end, row: startRow });
             }
         }
     }
     
-    // Find all valid snake pairs (one row UP, same column, end < start)
-    // Snakes go up one row visually (row N -> row N-1), but tile number decreases
-    for (let startRow = 1; startRow < BOARD_ROWS; startRow++) {
+    // Find all valid snake pairs
+    // Snakes go DOWN visually (row N -> row N+1) to decrease tile numbers
+    // Example: row 0 -> row 1 means tiles 51-60 -> tiles 41-50 (snake down)
+    for (let startRow = 0; startRow < BOARD_ROWS - 1; startRow++) {
         for (let col = 0; col < BOARD_COLS; col++) {
             const start = getTileNumber(startRow, col);
-            const endRow = startRow - 1; // One row up visually
+            const endRow = startRow + 1; // One row down visually (toward bottom)
             const end = getTileNumber(endRow, col);
             
             // Snake must go down in tile numbers (end < start)
             // Cannot start on tile 60 (last square)
             if (end < start && end >= 1 && start < TOTAL_TILES) {
-                allSnakePairs.push({ start, end });
+                allSnakePairs.push({ start, end, row: startRow });
             }
         }
     }
     
+    // Helper function to check if two tiles are adjacent (horizontally, vertically, or diagonally)
+    const areAdjacent = (tile1, tile2) => {
+        const pos1 = getTileRowCol(tile1);
+        const pos2 = getTileRowCol(tile2);
+        const rowDiff = Math.abs(pos1.row - pos2.row);
+        const colDiff = Math.abs(pos1.col - pos2.col);
+        // Adjacent if they're next to each other horizontally, vertically, or diagonally
+        return rowDiff <= 1 && colDiff <= 1 && (rowDiff + colDiff) > 0;
+    };
     
-    // Shuffle and select ladders (try multiple times if needed)
-    let ladderAttempts = 0;
-    while (gameState.ladders.length < numLadders && ladderAttempts < 10) {
-        const shuffledLadders = [...allLadderPairs].sort(() => Math.random() - 0.5);
-        const tempUsed = new Set(usedTiles);
-        const tempLadders = [];
+    // Helper function to check if a tile conflicts with existing pairs
+    const hasConflict = (tile, existingPairs) => {
+        for (const pair of existingPairs) {
+            if (areAdjacent(tile, pair.start) || areAdjacent(tile, pair.end)) {
+                return true;
+            }
+        }
+        return false;
+    };
+    
+    // Select ladders with spacing constraints (max 2 per row, try to avoid adjacent)
+    const maxPerRow = 2;
+    const rowCounts = new Array(BOARD_ROWS).fill(0);
+    const shuffledLadders = [...allLadderPairs].sort(() => Math.random() - 0.5);
+    
+    // First pass: try to get well-spaced ladders
+    for (const pair of shuffledLadders) {
+        if (gameState.ladders.length >= numLadders) break;
         
+        // Check row limit
+        if (rowCounts[pair.row] >= maxPerRow) continue;
+        
+        // Check if tiles are already used
+        if (usedTiles.has(pair.start) || usedTiles.has(pair.end)) continue;
+        
+        // Check if conflicts with existing ladders (prefer non-adjacent)
+        if (hasConflict(pair.start, gameState.ladders) || hasConflict(pair.end, gameState.ladders)) continue;
+        
+        // Check if conflicts with existing snakes (prefer non-adjacent)
+        if (hasConflict(pair.start, gameState.snakes) || hasConflict(pair.end, gameState.snakes)) continue;
+        
+        gameState.ladders.push(pair);
+        usedTiles.add(pair.start);
+        usedTiles.add(pair.end);
+        rowCounts[pair.row]++;
+    }
+    
+    // Second pass: if we don't have enough, relax adjacency constraint
+    if (gameState.ladders.length < numLadders) {
         for (const pair of shuffledLadders) {
-            if (tempLadders.length >= numLadders) break;
-            if (!tempUsed.has(pair.start) && !tempUsed.has(pair.end)) {
-                tempLadders.push(pair);
-                tempUsed.add(pair.start);
-                tempUsed.add(pair.end);
-            }
+            if (gameState.ladders.length >= numLadders) break;
+            
+            // Skip if already added
+            if (gameState.ladders.find(l => l.start === pair.start && l.end === pair.end)) continue;
+            
+            // Check row limit
+            if (rowCounts[pair.row] >= maxPerRow) continue;
+            
+            // Check if tiles are already used
+            if (usedTiles.has(pair.start) || usedTiles.has(pair.end)) continue;
+            
+            gameState.ladders.push(pair);
+            usedTiles.add(pair.start);
+            usedTiles.add(pair.end);
+            rowCounts[pair.row]++;
         }
-        
-        if (tempLadders.length >= numLadders) {
-            gameState.ladders = tempLadders.slice(0, numLadders);
-            tempLadders.slice(0, numLadders).forEach(p => {
-                usedTiles.add(p.start);
-                usedTiles.add(p.end);
-            });
-            break;
-        }
-        ladderAttempts++;
     }
     
-    // Shuffle and select snakes (try multiple times if needed)
-    let snakeAttempts = 0;
-    while (gameState.snakes.length < numSnakes && snakeAttempts < 10) {
-        const shuffledSnakes = [...allSnakePairs].sort(() => Math.random() - 0.5);
-        const tempSnakes = [];
+    // Select snakes with spacing constraints (max 2 per row, try to avoid adjacent)
+    const snakeRowCounts = new Array(BOARD_ROWS).fill(0);
+    const shuffledSnakes = [...allSnakePairs].sort(() => Math.random() - 0.5);
+    
+    // First pass: try to get well-spaced snakes
+    for (const pair of shuffledSnakes) {
+        if (gameState.snakes.length >= numSnakes) break;
         
+        // Check row limit
+        if (snakeRowCounts[pair.row] >= maxPerRow) continue;
+        
+        // Check if tiles are already used
+        if (usedTiles.has(pair.start) || usedTiles.has(pair.end)) continue;
+        
+        // Check if conflicts with existing snakes (prefer non-adjacent)
+        if (hasConflict(pair.start, gameState.snakes) || hasConflict(pair.end, gameState.snakes)) continue;
+        
+        // Check if conflicts with existing ladders (prefer non-adjacent)
+        if (hasConflict(pair.start, gameState.ladders) || hasConflict(pair.end, gameState.ladders)) continue;
+        
+        gameState.snakes.push(pair);
+        usedTiles.add(pair.start);
+        usedTiles.add(pair.end);
+        snakeRowCounts[pair.row]++;
+    }
+    
+    // Second pass: if we don't have enough, relax adjacency constraint
+    if (gameState.snakes.length < numSnakes) {
         for (const pair of shuffledSnakes) {
-            if (tempSnakes.length >= numSnakes) break;
-            if (!usedTiles.has(pair.start) && !usedTiles.has(pair.end)) {
-                tempSnakes.push(pair);
-                usedTiles.add(pair.start);
-                usedTiles.add(pair.end);
-            }
+            if (gameState.snakes.length >= numSnakes) break;
+            
+            // Skip if already added
+            if (gameState.snakes.find(s => s.start === pair.start && s.end === pair.end)) continue;
+            
+            // Check row limit
+            if (snakeRowCounts[pair.row] >= maxPerRow) continue;
+            
+            // Check if tiles are already used
+            if (usedTiles.has(pair.start) || usedTiles.has(pair.end)) continue;
+            
+            gameState.snakes.push(pair);
+            usedTiles.add(pair.start);
+            usedTiles.add(pair.end);
+            snakeRowCounts[pair.row]++;
         }
-        
-        if (tempSnakes.length >= numSnakes) {
-            gameState.snakes = tempSnakes.slice(0, numSnakes);
-            break;
-        }
-        snakeAttempts++;
     }
     
+    console.log(`Generated ${gameState.snakes.length} snakes and ${gameState.ladders.length} ladders`);
+    if (gameState.snakes.length < numSnakes || gameState.ladders.length < numLadders) {
+        console.warn(`Warning: Could not generate all snakes/ladders. Snakes: ${gameState.snakes.length}/${numSnakes}, Ladders: ${gameState.ladders.length}/${numLadders}`);
+    }
 }
 
 // Render the game board
@@ -458,14 +536,16 @@ function renderBoard() {
     gameBoard.style.maxWidth = '100%';
     gameBoard.style.maxHeight = '100%';
 
-    // Create tiles in snake pattern
+    // Create tiles in snake pattern (starting from bottom)
+    // Row 5 (bottom) = tiles 1-10, Row 0 (top) = tiles 51-60
     const tiles = [];
-    for (let row = 0; row < BOARD_ROWS; row++) {
+    for (let visualRow = 0; visualRow < BOARD_ROWS; visualRow++) {
         const rowTiles = [];
+        const logicalRow = BOARD_ROWS - 1 - visualRow; // Reverse: visual row 5 = logical row 0
         for (let col = 0; col < BOARD_COLS; col++) {
-            const tileNum = row % 2 === 0 
-                ? row * BOARD_COLS + col + 1
-                : (row + 1) * BOARD_COLS - col;
+            const tileNum = logicalRow % 2 === 0 
+                ? logicalRow * BOARD_COLS + col + 1
+                : (logicalRow + 1) * BOARD_COLS - col;
             rowTiles.push(tileNum);
         }
         tiles.push(rowTiles);
@@ -563,7 +643,7 @@ function drawSnakesAndLadders() {
         svg.style.zIndex = '2';
         svg.style.overflow = 'visible';
 
-        // Helper function to draw arrow (less prominent)
+        // Helper function to draw arrow (for snakes)
         const drawArrow = (startX, startY, endX, endY, color, strokeWidth) => {
             const dx = endX - startX;
             const dy = endY - startY;
@@ -612,7 +692,132 @@ function drawSnakesAndLadders() {
             svg.appendChild(arrowhead);
         };
 
-        // Draw snakes (less prominent red arrows pointing down)
+        // Helper function to draw a realistic ladder
+        const drawLadder = (startX, startY, endX, endY, color) => {
+            const dx = endX - startX;
+            const dy = endY - startY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx);
+            
+            // Ladder width (distance between the two side rails)
+            const ladderWidth = 20;
+            
+            // Calculate perpendicular direction for ladder width
+            const perpAngle = angle + Math.PI / 2;
+            const offsetX = (ladderWidth / 2) * Math.cos(perpAngle);
+            const offsetY = (ladderWidth / 2) * Math.sin(perpAngle);
+            
+            // Calculate the four corners of the ladder
+            const leftStartX = startX - offsetX;
+            const leftStartY = startY - offsetY;
+            const rightStartX = startX + offsetX;
+            const rightStartY = startY + offsetY;
+            const leftEndX = endX - offsetX;
+            const leftEndY = endY - offsetY;
+            const rightEndX = endX + offsetX;
+            const rightEndY = endY + offsetY;
+            
+            // Draw left side rail (thicker, more visible)
+            const leftRail = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            leftRail.setAttribute('x1', leftStartX);
+            leftRail.setAttribute('y1', leftStartY);
+            leftRail.setAttribute('x2', leftEndX);
+            leftRail.setAttribute('y2', leftEndY);
+            leftRail.setAttribute('stroke', '#6b4423'); // Darker brown for wood
+            leftRail.setAttribute('stroke-width', '5');
+            leftRail.setAttribute('stroke-opacity', '1');
+            leftRail.setAttribute('stroke-linecap', 'round');
+            leftRail.setAttribute('stroke-linejoin', 'round');
+            svg.appendChild(leftRail);
+            
+            // Draw right side rail (thicker, more visible)
+            const rightRail = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            rightRail.setAttribute('x1', rightStartX);
+            rightRail.setAttribute('y1', rightStartY);
+            rightRail.setAttribute('x2', rightEndX);
+            rightRail.setAttribute('y2', rightEndY);
+            rightRail.setAttribute('stroke', '#6b4423'); // Darker brown for wood
+            rightRail.setAttribute('stroke-width', '5');
+            rightRail.setAttribute('stroke-opacity', '1');
+            rightRail.setAttribute('stroke-linecap', 'round');
+            rightRail.setAttribute('stroke-linejoin', 'round');
+            svg.appendChild(rightRail);
+            
+            // Draw horizontal rungs (spaced evenly along the ladder)
+            const numRungs = Math.max(5, Math.floor(distance / 20)); // At least 5 rungs, more for longer ladders
+            for (let i = 1; i < numRungs; i++) {
+                const t = i / numRungs;
+                const rungX1 = leftStartX + (leftEndX - leftStartX) * t;
+                const rungY1 = leftStartY + (leftEndY - leftStartY) * t;
+                const rungX2 = rightStartX + (rightEndX - rightStartX) * t;
+                const rungY2 = rightStartY + (rightEndY - rightStartY) * t;
+                
+                const rung = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                rung.setAttribute('x1', rungX1);
+                rung.setAttribute('y1', rungY1);
+                rung.setAttribute('x2', rungX2);
+                rung.setAttribute('y2', rungY2);
+                rung.setAttribute('stroke', '#8b5a2b'); // Medium brown for rungs
+                rung.setAttribute('stroke-width', '3');
+                rung.setAttribute('stroke-opacity', '1');
+                rung.setAttribute('stroke-linecap', 'round');
+                svg.appendChild(rung);
+            }
+        };
+
+        // Helper function to draw a curved snake
+        const drawSnake = (startX, startY, endX, endY) => {
+            const dx = endX - startX;
+            const dy = endY - startY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx);
+            
+            // Create a curved path (snake-like S-curve)
+            // Control points for a smooth S-curve
+            const midX = (startX + endX) / 2;
+            const midY = (startY + endY) / 2;
+            
+            // Perpendicular offset for the curve
+            const perpAngle = angle + Math.PI / 2;
+            const curveOffset = distance * 0.3; // How much the curve bends
+            const control1X = startX + (midX - startX) * 0.5 + curveOffset * Math.cos(perpAngle);
+            const control1Y = startY + (midY - startY) * 0.5 + curveOffset * Math.sin(perpAngle);
+            const control2X = midX + (endX - midX) * 0.5 - curveOffset * Math.cos(perpAngle);
+            const control2Y = midY + (endY - midY) * 0.5 - curveOffset * Math.sin(perpAngle);
+            
+            // Create curved path using cubic Bezier
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const pathData = `M ${startX} ${startY} C ${control1X} ${control1Y}, ${control2X} ${control2Y}, ${endX} ${endY}`;
+            path.setAttribute('d', pathData);
+            path.setAttribute('stroke', '#a78bfa'); // Gentle purple/lavender color
+            path.setAttribute('stroke-width', '8'); // Thicker line
+            path.setAttribute('stroke-opacity', '0.7'); // Softer appearance
+            path.setAttribute('fill', 'none');
+            path.setAttribute('stroke-linecap', 'round');
+            path.setAttribute('stroke-linejoin', 'round');
+            svg.appendChild(path);
+            
+            // Draw snake head (small triangle at the end)
+            const headSize = 12;
+            const headAngle = Math.atan2(dy, dx);
+            const headX = endX - headSize * Math.cos(headAngle);
+            const headY = endY - headSize * Math.sin(headAngle);
+            const headLeftX = headX - headSize * 0.6 * Math.cos(headAngle - Math.PI / 2);
+            const headLeftY = headY - headSize * 0.6 * Math.sin(headAngle - Math.PI / 2);
+            const headRightX = headX - headSize * 0.6 * Math.cos(headAngle + Math.PI / 2);
+            const headRightY = headY - headSize * 0.6 * Math.sin(headAngle + Math.PI / 2);
+            
+            const head = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            head.setAttribute('d', `M ${endX} ${endY} L ${headLeftX} ${headLeftY} L ${headRightX} ${headRightY} Z`);
+            head.setAttribute('fill', '#a78bfa');
+            head.setAttribute('fill-opacity', '0.7');
+            head.setAttribute('stroke', '#a78bfa');
+            head.setAttribute('stroke-width', '1');
+            head.setAttribute('stroke-opacity', '0.8');
+            svg.appendChild(head);
+        };
+
+        // Draw snakes (curved, gentle-colored lines)
         gameState.snakes.forEach(snake => {
             const startTile = gameBoard.querySelector(`[data-tile-number="${snake.start}"]`);
             const endTile = gameBoard.querySelector(`[data-tile-number="${snake.end}"]`);
@@ -627,11 +832,11 @@ function drawSnakesAndLadders() {
                 const endX = endRect.left + endRect.width / 2 - boardRect.left;
                 const endY = endRect.top + endRect.height / 2 - boardRect.top;
 
-                drawArrow(startX, startY, endX, endY, '#dc2626', '5');
+                drawSnake(startX, startY, endX, endY);
             }
         });
 
-        // Draw ladders (less prominent green arrows pointing up)
+        // Draw ladders (realistic ladder with rails and rungs)
         gameState.ladders.forEach(ladder => {
             const startTile = gameBoard.querySelector(`[data-tile-number="${ladder.start}"]`);
             const endTile = gameBoard.querySelector(`[data-tile-number="${ladder.end}"]`);
@@ -646,7 +851,7 @@ function drawSnakesAndLadders() {
                 const endX = endRect.left + endRect.width / 2 - boardRect.left;
                 const endY = endRect.top + endRect.height / 2 - boardRect.top;
 
-                drawArrow(startX, startY, endX, endY, '#16a34a', '5');
+                drawLadder(startX, startY, endX, endY, '#16a34a');
             }
         });
 
@@ -656,55 +861,57 @@ function drawSnakesAndLadders() {
 
 // Update pawn positions on board
 function updatePawnPositions() {
-    // Remove existing pawns
-    document.querySelectorAll('.pawn').forEach(pawn => pawn.remove());
-
     const posA = Math.min(Math.max(1, gameState.teamPositions.teamA), TOTAL_TILES);
     const posB = Math.min(Math.max(1, gameState.teamPositions.teamB), TOTAL_TILES);
 
-    // Check if both teams are on the same tile
-    if (posA === posB) {
-        // Both teams on same tile - position side by side
-        const tile = document.querySelector(`[data-tile-number="${posA}"]`);
-        if (tile) {
-            const pawnContainer = tile.querySelector('.pawn-container');
-            if (pawnContainer) {
-                // Add both pawns side by side
-                const pawnA = document.createElement('div');
-                pawnA.className = 'pawn pawn-team-a pawn-side-by-side pawn-left';
-                pawnA.id = 'pawnTeamA';
-                pawnContainer.appendChild(pawnA);
+    // Get existing pawns
+    const existingPawnA = document.getElementById('pawnTeamA');
+    const existingPawnB = document.getElementById('pawnTeamB');
 
-                const pawnB = document.createElement('div');
-                pawnB.className = 'pawn pawn-team-b pawn-side-by-side pawn-right';
-                pawnB.id = 'pawnTeamB';
-                pawnContainer.appendChild(pawnB);
-            }
-        }
-    } else {
-        // Teams on different tiles - position normally
-        const tileA = document.querySelector(`[data-tile-number="${posA}"]`);
-        if (tileA) {
-            const pawnContainer = tileA.querySelector('.pawn-container');
-            if (pawnContainer) {
-                const pawnA = document.createElement('div');
-                pawnA.className = 'pawn pawn-team-a';
-                pawnA.id = 'pawnTeamA';
-                pawnContainer.appendChild(pawnA);
-            }
-        }
+    // Helper function to update a single pawn
+    const updatePawn = (team, position, existingPawn) => {
+        const tile = document.querySelector(`[data-tile-number="${position}"]`);
+        if (!tile) return;
 
-        const tileB = document.querySelector(`[data-tile-number="${posB}"]`);
-        if (tileB) {
-            const pawnContainer = tileB.querySelector('.pawn-container');
-            if (pawnContainer) {
-                const pawnB = document.createElement('div');
-                pawnB.className = 'pawn pawn-team-b';
-                pawnB.id = 'pawnTeamB';
-                pawnContainer.appendChild(pawnB);
+        const pawnContainer = tile.querySelector('.pawn-container');
+        if (!pawnContainer) return;
+
+        // Check if both teams are on the same tile
+        const sameTile = posA === posB;
+        
+        // Determine if this pawn needs to be moved or created
+        const needsUpdate = !existingPawn || 
+            existingPawn.closest('[data-tile-number]')?.dataset.tileNumber !== String(position) ||
+            (sameTile && !existingPawn.classList.contains('pawn-side-by-side')) ||
+            (!sameTile && existingPawn.classList.contains('pawn-side-by-side'));
+
+        if (needsUpdate) {
+            // Remove existing pawn if it exists
+            if (existingPawn) {
+                existingPawn.remove();
             }
+
+            // Create new pawn in correct position
+            const pawn = document.createElement('div');
+            pawn.id = team === 'teamA' ? 'pawnTeamA' : 'pawnTeamB';
+            // Use correct class names that match CSS: pawn-team-a or pawn-team-b
+            const teamClass = team === 'teamA' ? 'pawn-team-a' : 'pawn-team-b';
+            pawn.className = `pawn ${teamClass}`;
+            
+            if (sameTile) {
+                pawn.classList.add('pawn-side-by-side');
+                pawn.classList.add(team === 'teamA' ? 'pawn-left' : 'pawn-right');
+            }
+            
+            pawnContainer.appendChild(pawn);
         }
-    }
+    };
+
+    // Update Team A pawn
+    updatePawn('teamA', posA, existingPawnA);
+    
+    // Update Team B pawn
+    updatePawn('teamB', posB, existingPawnB);
 }
 
 // Handle dice roll

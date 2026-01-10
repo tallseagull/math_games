@@ -186,6 +186,10 @@ body {
     border-radius: 0;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    /* Add outer gridlines */
+    border-top: 3px solid rgba(0, 0, 0, 0.3);
+    border-left: 3px solid rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
 }
 
 /* Tile (Card) */
@@ -234,6 +238,10 @@ body {
     box-shadow: none;
     background: white;
     transition: opacity 0.3s;
+    /* Add gridlines */
+    border-right: 3px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 3px solid rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
 }
 
 .tile.flipped .card-front {
