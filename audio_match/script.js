@@ -393,6 +393,27 @@ class AudioMatchGame {
 }
 
 // Initialize the game when the page loads
+// Set back link based on URL parameters
+function setupBackLink() {
+    const backLink = document.getElementById('backLink');
+    if (backLink) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const category = urlParams.get('category');
+        const grade = urlParams.get('grade');
+        const unit = urlParams.get('unit');
+        const listKey = urlParams.get('listKey');
+        
+        if (category || grade || unit || listKey) {
+            // Came from grade selection, go back to golda
+            backLink.href = '../golda/index.html';
+        } else {
+            // Came from main menu
+            backLink.href = '../index.html';
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     new AudioMatchGame();
+    setupBackLink();
 });

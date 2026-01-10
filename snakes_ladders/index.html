@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snakes and Ladders - English Lessons</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gradient-to-br from-purple-600 to-purple-800 h-screen overflow-hidden">
+    <div class="container mx-auto p-4 h-screen flex flex-col overflow-hidden">
+        <!-- Header with back link -->
+        <div class="mb-4 flex-shrink-0">
+            <a href="#" id="backLink" class="text-white text-lg font-semibold hover:underline">← Back</a>
+        </div>
+
+        <div class="flex-1 flex gap-4 overflow-hidden min-h-0">
+            <!-- Sidebar -->
+            <div class="sidebar bg-white rounded-lg shadow-lg p-4 flex flex-col gap-4 min-w-[200px]">
+                <h2 class="text-2xl font-bold text-gray-800 text-center">Snakes & Ladders</h2>
+                
+                <!-- Current Turn Indicator -->
+                <div class="turn-indicator p-3 rounded-lg">
+                    <div class="text-sm font-semibold text-gray-600 mb-2">Current Turn</div>
+                    <div id="currentTurn" class="text-xl font-bold text-center"></div>
+                </div>
+
+                <!-- Team Positions -->
+                <div class="team-positions space-y-3">
+                    <div id="teamAInfo" class="team-info p-3 rounded-lg border-2">
+                        <div class="text-sm font-semibold text-gray-600">Team A</div>
+                        <div class="text-lg font-bold text-blue-600">Position: <span id="teamAPosition">0</span></div>
+                    </div>
+                    <div id="teamBInfo" class="team-info p-3 rounded-lg border-2">
+                        <div class="text-sm font-semibold text-gray-600">Team B</div>
+                        <div class="text-lg font-bold text-red-600">Position: <span id="teamBPosition">0</span></div>
+                    </div>
+                </div>
+
+                <!-- Roll Dice Button -->
+                <button id="rollDiceBtn" class="roll-dice-btn bg-gradient-to-r from-purple-600 to-purple-800 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:from-purple-700 hover:to-purple-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    Roll Dice
+                </button>
+
+                <!-- 3D Dice Container in Sidebar -->
+                <div id="sidebarDiceContainer" class="sidebar-dice-container"></div>
+
+                <!-- New Game Button -->
+                <button id="newGameBtn" class="new-game-btn bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600 transition-all">
+                    New Game
+                </button>
+            </div>
+
+            <!-- Main Game Area -->
+            <div class="flex-1 flex flex-col items-center justify-center relative overflow-hidden">
+                <!-- Game Board -->
+                <div id="gameBoard" class="game-board relative w-full h-full"></div>
+
+                <!-- 3D Dice Container -->
+                <div id="diceContainer" class="dice-container"></div>
+
+                <!-- Winner Overlay -->
+                <div id="winnerOverlay" class="winner-overlay hidden">
+                    <div class="winner-content bg-white rounded-lg shadow-2xl p-8 text-center">
+                        <h2 class="text-4xl font-bold mb-4" id="winnerText"></h2>
+                        <button id="playAgainBtn" class="bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-all mt-4">
+                            Play Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vocabulary Challenge Modal -->
+    <div id="challengeModal" class="challenge-modal hidden">
+        <div class="modal-content bg-white rounded-lg shadow-2xl p-8 max-w-2xl">
+            <h3 class="text-2xl font-bold text-center mb-6 text-gray-800">Vocabulary Challenge</h3>
+            <div class="challenge-image-container mb-6">
+                <img id="challengeImage" src="" alt="Vocabulary challenge" class="challenge-image mx-auto rounded-lg shadow-md">
+            </div>
+            <div class="challenge-buttons flex gap-6 justify-center">
+                <button id="correctBtn" class="correct-btn bg-green-500 hover:bg-green-600 text-white font-bold py-6 px-12 rounded-lg text-4xl shadow-lg transition-all">
+                    ✓
+                </button>
+                <button id="incorrectBtn" class="incorrect-btn bg-red-500 hover:bg-red-600 text-white font-bold py-6 px-12 rounded-lg text-4xl shadow-lg transition-all">
+                    ✗
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

@@ -175,7 +175,7 @@
                 <span class="grade-icon">📚</span>
                 <div class="grade-title">3rd Grade</div>
                 <div class="grade-description">
-                    Access dice words, audio match, and image grid games with 3rd grade (Gimel) words.
+                    Access dice words, audio match, image grid, memory match, and snakes and ladders games with 3rd grade (Gimel) words.
                 </div>
             </div>
             
@@ -267,6 +267,14 @@
                         <div class="grade-description">
                             Find matching image pairs! Two-player memory game.
                         </div>
+                    </a>
+                    
+                    <a href="../snakes_ladders/index.html?category=${category}" class="grade-card">
+                        <span class="grade-icon">🐍🪜</span>
+                        <div class="grade-title">Snakes and Ladders</div>
+                        <div class="grade-description">
+                            Roll the dice, answer vocabulary challenges, and race to tile 60!
+                        </div>
                     </a>`;
             }
             
@@ -278,13 +286,24 @@
                         <div class="grade-description">
                             Play Connect 4 or Tic-Tac-Toe with images!
                         </div>
+                    </a>
+                    
+                    <a href="../picture_reveal/index.html?category=${category}" class="grade-card">
+                        <span class="grade-icon">🖼️</span>
+                        <div class="grade-title">Picture Reveal</div>
+                        <div class="grade-description">
+                            Flip vocabulary cards to reveal a hidden picture!
+                        </div>
                     </a>`;
             }
             
             gamesHTML += `
                 </div>
                 
-                <a href="index.html" class="back-button">← Back to Grade Selection</a>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                    <a href="index.html" class="back-button">← Back to Grade Selection</a>
+                    <a href="../index.html" class="back-button">← Back to Main Menu</a>
+                </div>
             `;
             
             container.innerHTML = gamesHTML;

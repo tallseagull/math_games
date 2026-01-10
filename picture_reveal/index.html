@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Picture Reveal Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Image Selection Screen -->
+    <div class="image-selection" id="imageSelection">
+        <div class="selection-content">
+            <h1 class="selection-title">Picture Reveal Game</h1>
+            <p class="selection-subtitle">Choose a background image (1-5)</p>
+            <div class="image-options">
+                <button class="image-option" data-image="1">Image 1</button>
+                <button class="image-option" data-image="2">Image 2</button>
+                <button class="image-option" data-image="3">Image 3</button>
+                <button class="image-option" data-image="4">Image 4</button>
+                <button class="image-option" data-image="5">Image 5</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Container -->
+    <div class="game-container" id="gameContainer" style="display: none;">
+        <div class="game-header">
+            <a href="#" id="backLink" class="back-link">← Back</a>
+            <h2 class="game-title">Picture Reveal</h2>
+            <button id="revealAllButton" class="reveal-all-button">Reveal Image</button>
+        </div>
+        <div class="grid-wrapper">
+            <div class="main-grid" id="mainGrid">
+                <!-- 20 tiles will be dynamically created here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Image Selection Screen */
+.image-selection {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.selection-content {
+    text-align: center;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.selection-title {
+    color: white;
+    font-size: 48px;
+    margin-bottom: 10px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.selection-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.image-options {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.image-option {
+    background: white;
+    border: none;
+    border-radius: 15px;
+    padding: 30px 50px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #667eea;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.image-option:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.image-option:active {
+    transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Game Container */
+.game-container {
+    width: 100%;
+    max-width: 900px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.back-link {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+
+.back-link:hover {
+    color: #764ba2;
+}
+
+.game-title {
+    color: #4a5568;
+    font-size: 28px;
+    font-weight: 300;
+    flex: 1;
+    text-align: center;
+}
+
+.reveal-all-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.reveal-all-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+}
+
+.reveal-all-button:active {
+    transform: translateY(0);
+}
+
+.reveal-all-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Grid Wrapper */
+.grid-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Main Grid Container */
+.main-grid {
+    width: 800px;
+    height: 600px;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Tile (Card) */
+.tile {
+    position: absolute;
+    width: 160px;
+    height: 150px;
+    cursor: pointer;
+    perspective: 1000px;
+    background: transparent;
+    /* Remove any spacing - cards should touch each other */
+    margin: 0;
+    padding: 0;
+}
+
+.tile.flipped {
+    pointer-events: none;
+}
+
+/* Card Inner Container for 3D Flip */
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.tile.flipped .card-inner {
+    transform: rotateY(180deg);
+    /* After flip animation, hide card-inner completely to reveal background */
+    visibility: hidden;
+    transition: transform 0.6s, visibility 0s 0.6s;
+}
+
+/* Card Front (Vocabulary Image) */
+.card-front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* Remove border-radius and spacing so cards touch */
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: none;
+    background: white;
+    transition: opacity 0.3s;
+}
+
+.tile.flipped .card-front {
+    /* Hide the front after flip animation completes - use visibility to maintain layout */
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.6s, opacity 0.3s 0.6s;
+    pointer-events: none;
+}
+
+.card-front img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+/* Card Back (Transparent to show background) */
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: rotateY(180deg);
+    /* Completely transparent - background will show through */
+    background: transparent;
+    pointer-events: none;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+    .main-grid {
+        width: 100%;
+        max-width: 800px;
+        height: auto;
+        aspect-ratio: 4/3;
+    }
+    
+    .tile {
+        width: calc(20% - 2px);
+        height: calc(25% - 2px);
+    }
+}
