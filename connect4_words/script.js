@@ -286,6 +286,35 @@ function createBoard() {
                     const fallback = document.createElement('div');
                     fallback.className = 'cell-word';
                     fallback.textContent = word;
+                    
+                    // Apply same font sizing logic for fallback
+                    const wordLength = word.length;
+                    const hasSpace = word.includes(' ');
+                    let fontSize;
+                    
+                    if (hasSpace) {
+                        if (wordLength > 20) {
+                            fontSize = '1.4rem';
+                        } else if (wordLength > 15) {
+                            fontSize = '1.6rem';
+                        } else {
+                            fontSize = '1.8rem';
+                        }
+                    } else {
+                        if (wordLength > 15) {
+                            fontSize = '1.2rem';
+                        } else if (wordLength > 12) {
+                            fontSize = '1.5rem';
+                        } else if (wordLength > 9) {
+                            fontSize = '1.8rem';
+                        } else if (wordLength > 6) {
+                            fontSize = '2.2rem';
+                        } else {
+                            fontSize = '2.5rem';
+                        }
+                    }
+                    
+                    fallback.style.fontSize = fontSize;
                     imageContainer.appendChild(fallback);
                 };
                 imageContainer.appendChild(img);
@@ -295,6 +324,38 @@ function createBoard() {
                 const wordElement = document.createElement('div');
                 wordElement.className = 'cell-word';
                 wordElement.textContent = word;
+                
+                // Adjust font size for multi-word phrases (4th and 5th grade)
+                const wordLength = word.length;
+                const hasSpace = word.includes(' '); // Check if it's a multi-word phrase
+                let fontSize;
+                
+                // For multi-word phrases (with spaces), allow 2-line wrapping but use smaller font
+                if (hasSpace) {
+                    // Multi-word phrases can wrap to 2 lines at spaces, use smaller font
+                    if (wordLength > 20) {
+                        fontSize = '1.4rem'; // Very long phrases
+                    } else if (wordLength > 15) {
+                        fontSize = '1.6rem'; // Medium-long phrases
+                    } else {
+                        fontSize = '1.8rem'; // Short multi-word phrases
+                    }
+                } else {
+                    // Single words - single line, adjust based on length
+                    if (wordLength > 15) {
+                        fontSize = '1.2rem';
+                    } else if (wordLength > 12) {
+                        fontSize = '1.5rem';
+                    } else if (wordLength > 9) {
+                        fontSize = '1.8rem';
+                    } else if (wordLength > 6) {
+                        fontSize = '2.2rem';
+                    } else {
+                        fontSize = '2.5rem';
+                    }
+                }
+                
+                wordElement.style.fontSize = fontSize;
                 cell.appendChild(wordElement);
             }
             

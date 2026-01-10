@@ -334,6 +334,9 @@ body {
     word-wrap: break-word;
     z-index: 1;
     line-height: 1.2;
+    white-space: normal; /* Allow wrapping only at spaces */
+    overflow-wrap: break-word;
+    hyphens: none; /* Don't add hyphens */
 }
 
 .cell-image-container {
