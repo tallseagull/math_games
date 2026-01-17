@@ -541,6 +541,34 @@
     {
       "word": "fun",
       "weight": 1
+    },
+    {
+      "word": "cow",
+      "weight": 1
+    },
+    {
+      "word": "carrot",
+      "weight": 1
+    },
+    {
+      "word": "leg",
+      "weight": 1
+    },
+    {
+      "word": "brown",
+      "weight": 1
+    },
+    {
+      "word": "they",
+      "weight": 1
+    },
+    {
+      "word": "now",
+      "weight": 1
+    },
+    {
+      "word": "hungry",
+      "weight": 1
     }
   ],
   "numbers": [
