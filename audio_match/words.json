@@ -569,6 +569,34 @@
     {
       "word": "hungry",
       "weight": 1
+    },
+    {
+      "word": "lamp",
+      "weight": 1
+    },
+    {
+      "word": "mat",
+      "weight": 1
+    },
+    {
+      "word": "milk",
+      "weight": 1
+    },
+    {
+      "word": "floor",
+      "weight": 1
+    },
+    {
+      "word": "garden",
+      "weight": 1
+    },
+    {
+      "word": "kitchen",
+      "weight": 1
+    },
+    {
+      "word": "mad",
+      "weight": 1
     }
   ],
   "numbers": [
