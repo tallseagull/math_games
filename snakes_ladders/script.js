@@ -998,24 +998,50 @@ function handleChallengeAnswer(isCorrect) {
 // Move pawn
 function movePawn(spaces) {
     const currentPosition = gameState.teamPositions[gameState.currentTeam];
-    // Stop at tile 60 (don't go beyond)
-    let newPosition = Math.min(currentPosition + spaces, TOTAL_TILES);
+    const targetPosition = currentPosition + spaces;
+    
+    // If rolling past the end, bounce back
+    if (targetPosition > TOTAL_TILES) {
+        // Move forward to the end, then move back the excess
+        const excess = targetPosition - TOTAL_TILES;
+        const finalPosition = TOTAL_TILES - excess;
+        
+        // First animate forward to the end
+        animatePawnMovement(currentPosition, TOTAL_TILES, () => {
+            gameState.teamPositions[gameState.currentTeam] = TOTAL_TILES;
+            updatePawnPositions();
+            updateSidebar();
+            
+            // Then animate backward the excess
+            animatePawnMovement(TOTAL_TILES, finalPosition, () => {
+                gameState.teamPositions[gameState.currentTeam] = finalPosition;
+                updatePawnPositions();
+                updateSidebar();
+                
+                // Check for snake or ladder (can't win since we bounced back)
+                checkSnakeOrLadder(finalPosition);
+            });
+        });
+    } else {
+        // Normal movement (doesn't go past the end)
+        const newPosition = targetPosition;
+        
+        // Animate movement
+        animatePawnMovement(currentPosition, newPosition, () => {
+            gameState.teamPositions[gameState.currentTeam] = newPosition;
+            updatePawnPositions();
+            updateSidebar();
 
-    // Animate movement
-    animatePawnMovement(currentPosition, newPosition, () => {
-        gameState.teamPositions[gameState.currentTeam] = newPosition;
-        updatePawnPositions();
-        updateSidebar();
+            // Check win condition only if exactly on tile 60
+            if (newPosition === TOTAL_TILES) {
+                checkWinCondition();
+                return;
+            }
 
-        // Check win condition first (if reached tile 60)
-        if (newPosition >= TOTAL_TILES) {
-            checkWinCondition();
-            return;
-        }
-
-        // Check for snake or ladder
-        checkSnakeOrLadder(newPosition);
-    });
+            // Check for snake or ladder
+            checkSnakeOrLadder(newPosition);
+        });
+    }
 }
 
 // Animate pawn movement
@@ -1055,8 +1081,8 @@ function animatePawnMovement(fromTile, toTile, callback) {
 
 // Check for snake or ladder on landing tile
 function checkSnakeOrLadder(tileNumber) {
-    // Don't check for snake/ladder if already at tile 60
-    if (tileNumber >= TOTAL_TILES) {
+    // Don't check for snake/ladder if already at tile 60 (exact win)
+    if (tileNumber === TOTAL_TILES) {
         checkWinCondition();
         return;
     }
@@ -1108,7 +1134,8 @@ function animateLadderClimb(fromTile, toTile) {
 
 // Check win condition
 function checkWinCondition() {
-    if (gameState.teamPositions[gameState.currentTeam] >= TOTAL_TILES) {
+    // Only win if exactly on tile 60
+    if (gameState.teamPositions[gameState.currentTeam] === TOTAL_TILES) {
         gameState.gameOver = true;
         // Ensure position is exactly 60
         gameState.teamPositions[gameState.currentTeam] = TOTAL_TILES;
