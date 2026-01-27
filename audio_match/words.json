@@ -597,6 +597,34 @@
     {
       "word": "mad",
       "weight": 1
+    },
+    {
+      "word": "lunch",
+      "weight": 1
+    },
+    {
+      "word": "juice",
+      "weight": 1
+    },
+    {
+      "word": "cookie",
+      "weight": 1
+    },
+    {
+      "word": "chicken",
+      "weight": 1
+    },
+    {
+      "word": "car",
+      "weight": 1
+    },
+    {
+      "word": "plan",
+      "weight": 1
+    },
+    {
+      "word": "eat",
+      "weight": 1
     }
   ],
   "numbers": [
