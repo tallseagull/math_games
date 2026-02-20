@@ -78,6 +78,19 @@
         "There is", "Can you…?", "Do you want …?", "What's the weather today?", "Today is…."
       ]
     },
+    "4th_grade_unit3": {
+      "name": "Unit 3",
+      "description": "4th Grade Unit 3 words",
+      "words": [
+        "animal", "behind", "cool", "elephant", "face", "lion", "scared", "this", "turtle", "walk",
+        "water", "bath", "dinner", "dirty", "drink", "hungry", "listen", "thirsty", "tired", "wake up",
+        "with", "Arabic", "great", "Hebrew", "penguin", "people", "smile", "tricks", "try", "watch",
+        "woman", "beach", "birthday", "bring", "cake", "farm", "horse", "party", "ride", "sea",
+        "swimsuit", "when", "bike", "clean", "dance", "doctor", "floor", "hospital", "kitten", "table",
+        "How many..?", "What time is it?", "It's …. o'clock", "It's half past….", "What are you good at?",
+        "I'm good at…", "Please tell me….", "I know", "I don't know", "Good idea"
+      ]
+    },
     "gimel_images": {
       "name": "3rd Grade Images",
       "description": "Images for 3rd grade (Gimel) level",

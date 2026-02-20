@@ -625,6 +625,34 @@
     {
       "word": "eat",
       "weight": 1
+    },
+    {
+      "word": "family",
+      "weight": 1
+    },
+    {
+      "word": "fish",
+      "weight": 1
+    },
+    {
+      "word": "pet",
+      "weight": 1
+    },
+    {
+      "word": "birthday",
+      "weight": 1
+    },
+    {
+      "word": "card",
+      "weight": 1
+    },
+    {
+      "word": "swim",
+      "weight": 1
+    },
+    {
+      "word": "you",
+      "weight": 1
     }
   ],
   "numbers": [

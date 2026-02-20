@@ -74,7 +74,8 @@ function populateWordListSelector() {
         // Map unit parameter to word list key
         const unitMap = {
             '1': '4th_grade_unit1',
-            '2': '4th_grade_unit2'
+            '2': '4th_grade_unit2',
+            '3': '4th_grade_unit3'
         };
         const listKey = unitMap[unitParam];
         if (listKey && gameState.wordLists[listKey]) {
