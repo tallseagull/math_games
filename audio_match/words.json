@@ -653,6 +653,62 @@
     {
       "word": "you",
       "weight": 1
+    },
+    {
+      "word": "under",
+      "weight": 1
+    },
+    {
+      "word": "umbrella",
+      "weight": 1
+    },
+    {
+      "word": "jump",
+      "weight": 1
+    },
+    {
+      "word": "party",
+      "weight": 1
+    },
+    {
+      "word": "game",
+      "weight": 1
+    },
+    {
+      "word": "foot",
+      "weight": 1
+    },
+    {
+      "word": "glad",
+      "weight": 1
+    },
+    {
+      "word": "king",
+      "weight": 1
+    },
+    {
+      "word": "water",
+      "weight": 1
+    },
+    {
+      "word": "window",
+      "weight": 1
+    },
+    {
+      "word": "queen",
+      "weight": 1
+    },
+    {
+      "word": "eyes",
+      "weight": 1
+    },
+    {
+      "word": "ears",
+      "weight": 1
+    },
+    {
+      "word": "monkey",
+      "weight": 1
     }
   ],
   "numbers": [
