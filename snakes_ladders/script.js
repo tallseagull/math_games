@@ -118,10 +118,9 @@ async function loadUnitWords(unitNum) {
         const unitKey = `4th_grade_unit${unitNum}`;
         if (data.wordLists && data.wordLists[unitKey] && data.wordLists[unitKey].words) {
             const words = data.wordLists[unitKey].words;
-            // Filter out phrases, keep only single words
-            gameState.vocabularyWords = words.filter(word => {
-                return word && !word.includes(' ') && !word.includes('?') && !word.includes('…') && !word.includes('.');
-            });
+            gameState.vocabularyWords = words.filter(
+                word => word && String(word).trim().length > 0
+            );
             gameState.useWords = true;
         } else {
             // Fallback to images

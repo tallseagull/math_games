@@ -91,6 +91,19 @@
         "I'm good at…", "Please tell me….", "I know", "I don't know", "Good idea"
       ]
     },
+    "4th_grade_unit4": {
+      "name": "Unit 4",
+      "description": "4th Grade Unit 4 words",
+      "words": [
+        "angry", "apple", "bedroom", "be careful", "boat", "bread", "bus stop", "but", "buy", "cape",
+        "car", "cheese", "chicken", "chocolate", "clothes", "color", "come in", "cookie", "cross the street",
+        "driver", "ear", "from", "fruit", "go down", "go up", "going to", "helmet", "juice", "kitchen",
+        "little", "living room", "magic", "meat", "menu", "monkey", "next to", "now", "pink", "plane",
+        "police", "potato", "rain", "slowly", "soup", "station", "tomato", "train", "truck", "under",
+        "van", "very", "wet", "wind", "window", "wolf", "Are you...?", "Do you like....?", "He doesn't",
+        "She doesn't", "How are you going to...?", "by....", "How much ....?"
+      ]
+    },
     "gimel_images": {
       "name": "3rd Grade Images",
       "description": "Images for 3rd grade (Gimel) level",
