@@ -709,6 +709,34 @@
     {
       "word": "monkey",
       "weight": 1
+    },
+    {
+      "word": "zoo",
+      "weight": 1
+    },
+    {
+      "word": "quiet",
+      "weight": 1
+    },
+    {
+      "word": "top",
+      "weight": 1
+    },
+    {
+      "word": "ice cream",
+      "weight": 1
+    },
+    {
+      "word": "candy",
+      "weight": 1
+    },
+    {
+      "word": "cake",
+      "weight": 1
+    },
+    {
+      "word": "cut",
+      "weight": 1
     }
   ],
   "numbers": [
