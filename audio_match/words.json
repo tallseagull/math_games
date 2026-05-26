@@ -737,6 +737,34 @@
     {
       "word": "cut",
       "weight": 1
+    },
+    {
+      "word": "van",
+      "weight": 1
+    },
+    {
+      "word": "magic",
+      "weight": 1
+    },
+    {
+      "word": "head",
+      "weight": 1
+    },
+    {
+      "word": "kid",
+      "weight": 1
+    },
+    {
+      "word": "long",
+      "weight": 1
+    },
+    {
+      "word": "great",
+      "weight": 1
+    },
+    {
+      "word": "talk",
+      "weight": 1
     }
   ],
   "numbers": [
