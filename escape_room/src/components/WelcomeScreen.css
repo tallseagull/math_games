@@ -1,0 +1,76 @@
+.welcome-screen {
+  position: relative;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.welcome-screen__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.45);
+}
+
+.welcome-screen__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 580px;
+  padding: 2.25rem 2.5rem;
+  background: rgba(250, 246, 238, 0.95);
+  border-radius: 24px;
+  border: 4px solid #e8dcc8;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.welcome-screen__title {
+  font-size: clamp(2.75rem, 6vw, 3.25rem);
+  color: #c05621;
+  margin-bottom: 0.65rem;
+  text-shadow: 2px 2px 0 #fff8e7;
+}
+
+.welcome-screen__subtitle {
+  font-size: clamp(1.35rem, 3vw, 1.6rem);
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.welcome-screen__kid {
+  width: 160px;
+  height: auto;
+  margin: 0.5rem auto 1rem;
+  display: block;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+}
+
+.welcome-screen__text {
+  font-size: clamp(1.25rem, 2.8vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.65;
+  color: #2d3748;
+  margin-bottom: 1.75rem;
+}
+
+.welcome-screen__btn {
+  background: linear-gradient(135deg, #ed8936, #dd6b20);
+  color: white;
+  border: none;
+  padding: 1rem 2.25rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(221, 107, 32, 0.45);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.welcome-screen__btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(221, 107, 32, 0.55);
+}

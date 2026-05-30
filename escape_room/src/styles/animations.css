@@ -1,0 +1,107 @@
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulse-ring {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(255, 215, 0, 0);
+  }
+}
+
+@keyframes float-deco {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes sun-pulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.15);
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes correct-flash {
+  0% {
+    background-color: transparent;
+  }
+  30% {
+    background-color: rgba(72, 187, 120, 0.25);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.character--idle {
+  animation: bob 2.5s ease-in-out infinite;
+}
+
+.character--hover:hover {
+  animation: none;
+  transform: scale(1.08) rotate(-3deg);
+  transition: transform 0.25s ease;
+}
+
+.progress-step--current {
+  animation: pulse-ring 1.8s ease-in-out infinite;
+}
+
+.lock--shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.task-panel--correct-flash {
+  animation: correct-flash 0.8s ease-out;
+}
+
+.decoration--active {
+  animation: float-deco 3s ease-in-out infinite;
+}
+
+.board--finale-glow {
+  animation: sun-pulse 2s ease-in-out infinite;
+}

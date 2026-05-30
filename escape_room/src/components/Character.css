@@ -1,0 +1,17 @@
+/* JSON left/top = bottom-right corner of the sprite (animations stay on inner img) */
+.character-anchor {
+  position: absolute;
+  z-index: 10;
+  transform: translate(-100%, -100%);
+  pointer-events: auto;
+  transition:
+    left 0.85s cubic-bezier(0.34, 1.2, 0.64, 1),
+    top 0.85s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.character {
+  display: block;
+  width: clamp(72px, 11vw, 110px);
+  height: auto;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+}

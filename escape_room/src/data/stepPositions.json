@@ -1,0 +1,23 @@
+{
+  "board": {
+    "width": 2340,
+    "height": 1655,
+    "comment": "Intrinsic pixels of board-background.png. left/top are % of image size (not the screen)."
+  },
+  "anchor": "bottom-right",
+  "anchorComment": "left and top place the bottom-right corner of kid.png on each chalk circle.",
+  "positions": [
+    { "step": 1, "left": 12, "top": 32 },
+    { "step": 2, "left": 12, "top": 50 },
+    { "step": 3, "left": 16, "top": 70 },
+    { "step": 4, "left": 32, "top": 78 },
+    { "step": 5, "left": 42, "top": 70 },
+    { "step": 6, "left": 46, "top": 43 },
+    { "step": 7, "left": 52, "top": 28 },
+    { "step": 8, "left": 65, "top": 24 },
+    { "step": 9, "left": 78, "top": 25 },
+    { "step": 10, "left": 86, "top": 35 },
+    { "step": 11, "left": 92, "top": 50 },
+    { "step": 12, "left": 95, "top": 70 }
+  ]
+}

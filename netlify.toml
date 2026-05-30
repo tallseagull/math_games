@@ -1,4 +1,6 @@
-# Netlify configuration
-# The pdf_word_processor directory is excluded via .netlifyignore
-# This is a Python/Streamlit app, not needed for the frontend deployment
+[build]
+  command = "cd escape_room && npm ci && npm run build"
+  publish = "."
 
+[build.environment]
+  NODE_VERSION = "20"

@@ -1,0 +1,35 @@
+.game-board {
+  container-type: size;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  background: #3d4f4f;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 4px solid #5a6b6b;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Sized to board image aspect ratio — % positions are relative to this box (= image) */
+.game-board__surface {
+  position: relative;
+  aspect-ratio: var(--board-aspect);
+  width: min(100cqw, calc(100cqh * var(--board-w) / var(--board-h)));
+  height: min(100cqh, calc(100cqw * var(--board-h) / var(--board-w)));
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.game-board__image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: fill;
+}
+
+.game-board--finale .game-board__image {
+  filter: brightness(1.05);
+}

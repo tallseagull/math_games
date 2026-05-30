@@ -1,0 +1,39 @@
+.feedback-banner {
+  padding: 0.65rem 0.85rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.feedback-banner--correct {
+  background: linear-gradient(135deg, #c6f6d5, #9ae6b4);
+  color: #22543d;
+  border: 3px solid #48bb78;
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+.feedback-banner__message {
+  margin: 0;
+}
+
+.feedback-banner__answer {
+  margin: 0.5rem 0 0;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.feedback-banner__answer strong {
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: inline-block;
+  margin-top: 0.15rem;
+}
+
+.feedback-banner--wrong {
+  background: linear-gradient(135deg, #fed7d7, #feb2b2);
+  color: #742a2a;
+  border: 3px solid #fc8181;
+  margin-bottom: 0;
+}

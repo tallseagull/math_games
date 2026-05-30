@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Debug — מיקומי שלבים (מ־stepPositions.json)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #1a1a1a;
+      color: #eee;
+      padding: 1rem;
+    }
+    h1 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+    p { margin-bottom: 0.75rem; color: #aaa; font-size: 0.95rem; line-height: 1.5; }
+    code { background: #333; padding: 0.1rem 0.35rem; border-radius: 4px; }
+    .links { margin-bottom: 1rem; }
+    .links a { color: #63b3ed; margin-left: 1rem; }
+    .panel {
+      max-width: 1200px;
+      margin: 0 auto 1rem;
+      padding: 1rem;
+      background: #3d4f4f;
+      border-radius: 16px;
+      border: 4px solid #5a6b6b;
+      container-type: size;
+      display: grid;
+      place-items: center;
+      height: min(80vh, 700px);
+    }
+    .surface {
+      position: relative;
+      aspect-ratio: var(--board-aspect);
+      width: min(100cqw, calc(100cqh * var(--board-w) / var(--board-h)));
+      height: min(100cqh, calc(100cqw * var(--board-h) / var(--board-w)));
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .surface img.board {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: fill;
+    }
+    .marker {
+      position: absolute;
+      /* JSON point = bottom-right of kid sprite */
+      transform: translate(-100%, -100%);
+      pointer-events: none;
+      text-align: right;
+      z-index: 2;
+    }
+    .marker__num {
+      display: inline-block;
+      background: rgba(0, 0, 0, 0.85);
+      color: #ffe566;
+      font-weight: 800;
+      font-size: 1.5rem;
+      padding: 0.15rem 0.5rem;
+      border: 3px solid #ff4444;
+      border-radius: 6px;
+    }
+    .marker__coord {
+      display: block;
+      font-size: 0.7rem;
+      color: #fff;
+      margin-top: 2px;
+    }
+    .marker__dot {
+      width: 12px;
+      height: 12px;
+      background: #ff0000;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      margin: 4px auto 0;
+    }
+    .legend {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { border: 1px solid #444; padding: 0.4rem 0.6rem; text-align: center; }
+    th { background: #333; }
+    .cmd {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: #2d3748;
+      border-radius: 8px;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>מיקומי דני — אחוזים מגודל תמונת הלוח</h1>
+  <p>
+    ערכו <code>src/data/stepPositions.json</code> — <code>left</code>/<code>top</code> הם אחוזים מגודל
+    <strong>תמונת הלוח</strong>, ומסמנים את <strong>הפינה הימנית-תחתונה</strong> של דני.
+    אחרי שינוי, הריצו את סקריפט יצירת התמונה.
+  </p>
+  <div class="links">
+    <a href="./src/assets/debug-board-positions.png" target="_blank">debug-board-positions.png</a>
+    <a href="./src/data/stepPositions.json" target="_blank">stepPositions.json</a>
+  </div>
+  <div class="panel" id="panel">
+    <div class="surface" id="surface">
+      <img class="board" src="./src/assets/board-background.png" alt="לוח" />
+    </div>
+  </div>
+  <div class="legend">
+    <table>
+      <thead>
+        <tr><th>שלב</th><th>left %</th><th>top %</th></tr>
+      </thead>
+      <tbody id="coords"></tbody>
+    </table>
+    <p class="cmd">python3 scripts/generate-debug-positions.py</p>
+  </div>
+  <script>
+    async function init() {
+      const res = await fetch('./src/data/stepPositions.json');
+      const config = await res.json();
+      const { width, height } = config.board;
+      const aspect = `${width} / ${height}`;
+      const panel = document.getElementById('panel');
+      const surfaceEl = document.getElementById('surface');
+      panel.style.setProperty('--board-aspect', aspect);
+      panel.style.setProperty('--board-w', String(width));
+      panel.style.setProperty('--board-h', String(height));
+      surfaceEl.style.setProperty('--board-aspect', aspect);
+      surfaceEl.style.setProperty('--board-w', String(width));
+      surfaceEl.style.setProperty('--board-h', String(height));
+
+      const surface = document.getElementById('surface');
+      const tbody = document.getElementById('coords');
+
+      config.positions.forEach(({ step, left, top }) => {
+        const m = document.createElement('div');
+        m.className = 'marker';
+        m.style.left = `${left}%`;
+        m.style.top = `${top}%`;
+        m.innerHTML = `
+          <span class="marker__num">${step}</span>
+          <span class="marker__coord">${left}%, ${top}%</span>
+          <div class="marker__dot"></div>
+        `;
+        surface.appendChild(m);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${step}</td><td>${left}</td><td>${top}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    init().catch(console.error);
+  </script>
+</body>
+</html>

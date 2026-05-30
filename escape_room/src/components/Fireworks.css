@@ -1,0 +1,219 @@
+.fireworks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.fireworks--fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  border-radius: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.fireworks__flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 45%,
+    rgba(255, 220, 100, 0.55) 0%,
+    rgba(255, 150, 80, 0.25) 35%,
+    transparent 70%
+  );
+  animation: firework-flash 3s ease-out forwards;
+  opacity: 0;
+}
+
+.fireworks__flash--delayed {
+  animation-delay: 1s;
+  background: radial-gradient(
+    circle at 40% 50%,
+    rgba(120, 200, 255, 0.45) 0%,
+    rgba(255, 200, 120, 0.2) 40%,
+    transparent 72%
+  );
+}
+
+.fireworks__burst-site {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.fireworks__core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 24px 8px currentColor;
+  animation: firework-core 3s ease-out forwards;
+  opacity: 0;
+}
+
+.fireworks__ring {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 4px solid;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: firework-ring 2.8s ease-out forwards;
+  opacity: 0;
+  box-shadow: 0 0 12px currentColor;
+}
+
+.fireworks__spark {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 8px 2px currentColor;
+}
+
+.fireworks__spark--burst {
+  animation: firework-spark-burst 2.8s ease-out forwards;
+}
+
+.fireworks__particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: firework-particle 2.9s ease-out forwards;
+  opacity: 0;
+  box-shadow: 0 0 6px 1px currentColor;
+}
+
+.fireworks__star {
+  position: absolute;
+  animation: firework-star 2.8s ease-out forwards;
+  opacity: 0;
+  text-shadow:
+    0 0 12px currentColor,
+    0 0 24px currentColor;
+  filter: drop-shadow(0 0 4px gold);
+}
+
+.fireworks__fountain {
+  position: absolute;
+  bottom: 12%;
+  width: 6px;
+  height: 6px;
+}
+
+.fireworks__fountain-drop {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--fountain-color);
+  animation: firework-fountain 2.9s ease-out forwards;
+  opacity: 0;
+  box-shadow: 0 0 10px 2px var(--fountain-color);
+}
+
+@keyframes firework-flash {
+  0% {
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  35% {
+    opacity: 0.35;
+  }
+  55% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes firework-core {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.8);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+}
+
+@keyframes firework-ring {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  40% {
+    opacity: 0.85;
+  }
+  100% {
+    width: 220px;
+    height: 220px;
+    opacity: 0;
+  }
+}
+
+@keyframes firework-spark-burst {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-200px) scale(0.4);
+  }
+}
+
+@keyframes firework-particle {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), var(--ty)) scale(0.2);
+  }
+}
+
+@keyframes firework-star {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.8) rotate(120deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8) rotate(280deg) translateY(-120px);
+  }
+}
+
+@keyframes firework-fountain {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-240px) scale(0.3);
+  }
+}

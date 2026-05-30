@@ -1,0 +1,77 @@
+.finale-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(160deg, #3d4f4f 0%, #2d3a3a 50%, #1a2525 100%);
+  overflow: hidden;
+}
+
+.finale-screen__confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.finale-screen__confetti-piece {
+  position: absolute;
+  top: -30px;
+  border-radius: 2px;
+  animation: confetti-fall linear infinite;
+}
+
+.finale-screen__hero {
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.finale-screen__kid {
+  display: block;
+  width: clamp(140px, 22vw, 240px);
+  height: auto;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
+}
+
+.finale-screen__content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 2rem 2.5rem;
+  max-width: 560px;
+  margin: 0 1rem;
+  background: rgba(250, 246, 238, 0.97);
+  border-radius: 24px;
+  border: 4px solid #68d391;
+  box-shadow: 0 0 40px rgba(104, 211, 129, 0.35);
+}
+
+.finale-screen__title {
+  font-size: 2.2rem;
+  color: #276749;
+  margin-bottom: 1rem;
+}
+
+.finale-screen__line {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.finale-screen__line--big {
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.finale-screen__line--accent {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #c05621;
+  margin-top: 1rem;
+}
