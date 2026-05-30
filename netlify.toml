@@ -1,5 +1,5 @@
 [build]
-  command = "cd escape_room && npm ci && npm run build"
+  command = "npm run build"
   publish = "."
 
 [build.environment]

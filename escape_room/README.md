@@ -48,4 +48,6 @@ Output: `src/assets/debug-board-positions.png` — numbered markers overlaid on 
 
 ## Deploy
 
-Netlify runs `cd escape_room && npm ci && npm run build` before publishing the repo root (see `netlify.toml`).
+From the repo root, `npm run build` installs escape-room dependencies, builds, and copies output to `escape_room/index.html` and `escape_room/assets/`. Netlify runs that single command (see root `netlify.toml`).
+
+Source images and audio live in `src/assets/` and must be committed to git.

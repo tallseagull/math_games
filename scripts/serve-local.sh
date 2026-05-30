@@ -4,8 +4,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PORT="${PORT:-8080}"
 
-echo "Building escape room..."
-(cd "$ROOT/escape_room" && npm run build)
+echo "Building site (escape room)..."
+(cd "$ROOT" && npm run build)
 
 echo ""
 echo "Serving entire repo at http://localhost:${PORT}/"

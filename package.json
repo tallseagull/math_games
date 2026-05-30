@@ -1,0 +1,8 @@
+{
+  "name": "math-games",
+  "private": true,
+  "scripts": {
+    "build": "npm ci --prefix escape_room && npm run build --prefix escape_room",
+    "serve": "./scripts/serve-local.sh"
+  }
+}
