@@ -765,6 +765,34 @@
     {
       "word": "talk",
       "weight": 1
+    },
+    {
+      "word": "thirsty",
+      "weight": 1
+    },
+    {
+      "word": "bread",
+      "weight": 1
+    },
+    {
+      "word": "cheese",
+      "weight": 1
+    },
+    {
+      "word": "bus",
+      "weight": 1
+    },
+    {
+      "word": "ride",
+      "weight": 1
+    },
+    {
+      "word": "get",
+      "weight": 1
+    },
+    {
+      "word": "cost",
+      "weight": 1
     }
   ],
   "numbers": [
