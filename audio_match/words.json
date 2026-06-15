@@ -793,6 +793,30 @@
     {
       "word": "cost",
       "weight": 1
+    },
+    {
+      "word": "shop",
+      "weight": 1
+    },
+    {
+      "word": "short",
+      "weight": 1
+    },
+    {
+      "word": "chocolate",
+      "weight": 1
+    },
+    {
+      "word": "men",
+      "weight": 1
+    },
+    {
+      "word": "us",
+      "weight": 1
+    },
+    {
+      "word": "half",
+      "weight": 1
     }
   ],
   "numbers": [
