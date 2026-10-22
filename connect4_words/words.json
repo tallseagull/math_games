@@ -107,6 +107,7 @@
     "3rd_grade_unit1": {
       "name": "3rd Grade Unit 1",
       "description": "Unit 1 words only",
+      "showImages": true,
       "words": [
         "boy", "girl", "mom", "dog", "cat",
         "black", "white", "red", "blue",
@@ -118,6 +119,7 @@
     "3rd_grade_unit2": {
       "name": "3rd Grade Unit 2",
       "description": "Unit 2 words only",
+      "showImages": true,
       "words": [
         "elephant", "egg", "eraser", "school", "pencil", "bed", "table",
         "test", "teacher", "pen", "pencil case", "hat", "add", "plus",
@@ -129,6 +131,7 @@
     "3rd_grade_unit3": {
       "name": "3rd Grade Unit 3",
       "description": "Unit 3 words only",
+      "showImages": true,
       "words": [
         "sofa", "sun", "sunny", "hot", "cold", "living room", "farm",
         "mouse", "sheep", "tree", "friend", "job", "soft", "fun",
@@ -140,6 +143,7 @@
     "3rd_grade_unit4": {
       "name": "3rd Grade Unit 4",
       "description": "Unit 4 words only",
+      "showImages": true,
       "words": [
         "family", "fish", "pet", "birthday", "card", "swim", "you",
         "under", "umbrella", "jump", "party", "game", "foot", "glad",

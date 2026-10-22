@@ -139,8 +139,8 @@ async function selectWordList(listKey, gameParam = null) {
             return;
         }
     } else {
-        gameState.isImageMode = false;
         gameState.words = wordsForSelectedList(listKey);
+        gameState.isImageMode = Boolean(list && list.showImages);
     }
     
     updateModeButtons();
