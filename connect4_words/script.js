@@ -1,3 +1,6 @@
+const CONNECT4_CELL_COUNT = 42;
+const TICTACTOE_CELL_COUNT = 9;
+
 // Game state
 let gameState = {
     wordLists: {},
@@ -137,21 +140,26 @@ async function selectWordList(listKey, gameParam = null) {
         }
     } else {
         gameState.isImageMode = false;
-        gameState.words = list.words || [];
+        gameState.words = wordsForSelectedList(listKey);
     }
     
+    updateModeButtons();
+
     // If game parameter is provided, start the game directly
     if (gameParam) {
-        if (gameParam === 'tic-tac-toe') {
+        if (gameParam === 'tic-tac-toe' && gameState.words.length >= TICTACTOE_CELL_COUNT) {
             startGame(3, 3, 3);
             return;
         } else if (gameParam === 'connect4') {
             // Check if we need to supplement words for Connect 4 (needs 42 words)
-            if (listKey === '4th_grade_unit2' && gameState.words.length < 42) {
+            if (listKey === '4th_grade_unit2' && gameState.words.length < CONNECT4_CELL_COUNT) {
                 supplementWordsForConnect4();
+                updateModeButtons();
             }
-            startGame(6, 7, 4);
-            return;
+            if (gameState.words.length >= CONNECT4_CELL_COUNT) {
+                startGame(6, 7, 4);
+                return;
+            }
         }
     }
     
@@ -160,6 +168,54 @@ async function selectWordList(listKey, gameParam = null) {
     document.querySelector('#gameSetup h2').textContent = 'Choose Game Mode';
     document.getElementById('gameModeTitle').style.display = 'none';
     document.getElementById('modeButtons').style.display = 'flex';
+}
+
+function wordsForSelectedList(listKey) {
+    const unitMatch = /^3rd_grade_unit(\d+)$/.exec(listKey);
+    if (!unitMatch) {
+        const list = gameState.wordLists[listKey];
+        return list && list.words ? list.words : [];
+    }
+
+    const unit = Number(unitMatch[1]);
+    const words = [];
+    const seen = new Set();
+    for (let i = 1; i <= unit; i += 1) {
+        const source = gameState.wordLists[`3rd_grade_unit${i}`];
+        const sourceWords = source && source.words ? source.words : [];
+        sourceWords.forEach(word => {
+            if (!seen.has(word)) {
+                seen.add(word);
+                words.push(word);
+            }
+        });
+    }
+    return words;
+}
+
+function updateModeButtons() {
+    const connect4Button = document.getElementById('connect4Button');
+    const ticTacToeButton = document.getElementById('ticTacToeButton');
+    const modeNote = document.getElementById('modeNote');
+    const wordCount = gameState.words.length;
+    const canPlayConnect4 = wordCount >= CONNECT4_CELL_COUNT;
+    const canPlayTicTacToe = wordCount >= TICTACTOE_CELL_COUNT;
+
+    if (connect4Button) {
+        connect4Button.style.display = canPlayConnect4 ? '' : 'none';
+    }
+    if (ticTacToeButton) {
+        ticTacToeButton.style.display = canPlayTicTacToe ? '' : 'none';
+    }
+    if (modeNote) {
+        if (!canPlayConnect4) {
+            modeNote.style.display = 'block';
+            modeNote.textContent = `Connect 4 needs ${CONNECT4_CELL_COUNT} words. This list has ${wordCount}, so only Tic-Tac-Toe is available.`;
+        } else {
+            modeNote.style.display = 'none';
+            modeNote.textContent = '';
+        }
+    }
 }
 
 // Initialize the game
@@ -192,7 +248,7 @@ function startGame(rows, cols, connectN) {
     
     // Check if we need to supplement words for Connect 4 with Unit 2
     if (rows === 6 && cols === 7 && connectN === 4 && gameState.selectedListKey === '4th_grade_unit2') {
-        if (gameState.words.length < 42) {
+        if (gameState.words.length < CONNECT4_CELL_COUNT) {
             supplementWordsForConnect4();
         }
     }
@@ -223,7 +279,7 @@ function supplementWordsForConnect4() {
     }
     
     const unit2Words = [...gameState.words];
-    const neededWords = 42 - unit2Words.length;
+    const neededWords = CONNECT4_CELL_COUNT - unit2Words.length;
     
     if (neededWords > 0 && gameState.wordLists['4th_grade_unit1']) {
         const unit1Words = gameState.wordLists['4th_grade_unit1'].words || [];
@@ -598,6 +654,11 @@ document.getElementById('changeModeButton').addEventListener('click', () => {
     document.querySelector('#gameSetup h2').textContent = 'Choose Word List';
     document.getElementById('gameModeTitle').style.display = 'none';
     document.getElementById('modeButtons').style.display = 'none';
+    const modeNote = document.getElementById('modeNote');
+    if (modeNote) {
+        modeNote.style.display = 'none';
+        modeNote.textContent = '';
+    }
     document.getElementById('gameSetup').style.display = 'block';
     document.getElementById('gameContainer').style.display = 'none';
 });

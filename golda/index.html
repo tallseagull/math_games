@@ -175,7 +175,7 @@
                 <span class="grade-icon">📚</span>
                 <div class="grade-title">3rd Grade</div>
                 <div class="grade-description">
-                    Access dice words, audio match, image grid, memory match, and snakes and ladders games with 3rd grade (Gimel) words.
+                    Access dice words, audio match, image grid, memory match, snakes and ladders, and unit word games for Tic-Tac-Toe and Connect 4.
                 </div>
             </div>
             
@@ -280,6 +280,14 @@
             
             if (gradeLabel === '3rd' && connect4ImagesLink) {
                 gamesHTML += `
+                    <div class="grade-card" onclick="show3rdUnitSelection()">
+                        <span class="grade-icon">⭕</span>
+                        <div class="grade-title">Tic-Tac-Toe & Connect 4</div>
+                        <div class="grade-description">
+                            Pick a unit, then play with those words. Later units include the words from earlier units.
+                        </div>
+                    </div>
+
                     <a href="${connect4ImagesLink}" class="grade-card">
                         <span class="grade-icon">🔴🟡</span>
                         <div class="grade-title">Connect 4 Images</div>
@@ -307,6 +315,119 @@
             `;
             
             container.innerHTML = gamesHTML;
+        }
+
+        const CONNECT4_CELL_COUNT = 42;
+        const TICTACTOE_CELL_COUNT = 9;
+
+        function unitScopeLabel(unit) {
+            if (unit === 1) {
+                return 'Unit 1 words only';
+            }
+            return `Units 1-${unit}`;
+        }
+
+        function wordsFor3rdUnit(wordLists, unit) {
+            const words = [];
+            const seen = new Set();
+            for (let i = 1; i <= unit; i += 1) {
+                const list = wordLists[`3rd_grade_unit${i}`];
+                const sourceWords = list && list.words ? list.words : [];
+                sourceWords.forEach(word => {
+                    if (!seen.has(word)) {
+                        seen.add(word);
+                        words.push(word);
+                    }
+                });
+            }
+            return words;
+        }
+
+        function show3rdUnitSelection() {
+            const container = document.querySelector('.container');
+            const units = [1, 2, 3, 4].map(unit => `
+                <div class="grade-card" onclick="show3rdUnitGames(${unit})">
+                    <span class="grade-icon">📘</span>
+                    <div class="grade-title">Unit ${unit}</div>
+                    <div class="grade-description">${unitScopeLabel(unit)}</div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <h1>🏫 Golda - 3rd Grade</h1>
+                <p class="subtitle">Select a unit</p>
+                <div class="grades-grid">
+                    ${units}
+                </div>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                    <button class="back-button" onclick="showGameSelection('3rd', 'Gimel')">← Back to Games</button>
+                    <a href="../index.html" class="back-button">← Back to Main Menu</a>
+                </div>
+            `;
+        }
+
+        async function show3rdUnitGames(unit) {
+            const container = document.querySelector('.container');
+            let words = [];
+            let loadError = '';
+
+            try {
+                const response = await fetch('../connect4_words/words.json');
+                if (!response.ok) {
+                    throw new Error('Could not load word lists');
+                }
+                const data = await response.json();
+                words = wordsFor3rdUnit(data.wordLists || {}, unit);
+            } catch (error) {
+                loadError = 'The word list could not be loaded.';
+            }
+
+            const canPlayTicTacToe = words.length >= TICTACTOE_CELL_COUNT;
+            const canPlayConnect4 = words.length >= CONNECT4_CELL_COUNT;
+            const listKey = `3rd_grade_unit${unit}`;
+            let buttons = '';
+
+            if (canPlayTicTacToe) {
+                buttons += `
+                    <a href="../connect4_words/index.html?listKey=${listKey}&game=tic-tac-toe" class="game-button">
+                        Tic-Tac-Toe
+                    </a>
+                `;
+            }
+            if (canPlayConnect4) {
+                buttons += `
+                    <a href="../connect4_words/index.html?listKey=${listKey}&game=connect4" class="game-button">
+                        Connect 4
+                    </a>
+                `;
+            }
+
+            let note = '';
+            if (loadError) {
+                note = `<p class="grade-description">${loadError}</p>`;
+            } else if (!canPlayConnect4) {
+                note = `<p class="grade-description">Connect 4 needs ${CONNECT4_CELL_COUNT} words. This set has ${words.length}, so only Tic-Tac-Toe is available.</p>`;
+            } else {
+                note = `<p class="grade-description">${words.length} words</p>`;
+            }
+
+            container.innerHTML = `
+                <h1>🏫 Golda - 3rd Grade</h1>
+                <p class="subtitle">Unit ${unit} · ${unitScopeLabel(unit)}</p>
+                <div class="grades-grid" style="grid-template-columns: minmax(260px, 420px); justify-content: center;">
+                    <div class="unit-card">
+                        <div class="unit-title">Choose a game</div>
+                        ${note}
+                        <div class="game-buttons">
+                            ${buttons}
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                    <button class="back-button" onclick="show3rdUnitSelection()">← Back to Units</button>
+                    <a href="../index.html" class="back-button">← Back to Main Menu</a>
+                </div>
+            `;
         }
 
         function showUnitSelection() {
