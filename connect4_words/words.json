@@ -113,7 +113,11 @@
         "black", "white", "red", "blue",
         "zero", "one", "two", "three", "four", "five", "six",
         "seven", "eight", "nine", "ten", "eleven", "twelve",
-        "apple", "man", "woman", "green", "yellow", "orange"
+        "apple", "man", "woman", "green", "yellow", "orange",
+        "baby", "bag", "book", "box", "big", "small",
+        "notebook", "nose", "mouth", "computer", "sister", "brother",
+        "dad", "desk", "duck", "help", "sad", "bad",
+        "grandma", "grandpa", "gift", "gray", "door", "house"
       ]
     },
     "3rd_grade_unit2": {
