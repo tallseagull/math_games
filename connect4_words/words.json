@@ -40,68 +40,66 @@
     },
     "4th_grade_unit1": {
       "name": "Unit 1",
-      "description": "4th Grade Unit 1 words",
+      "description": "4th Grade Unit 1 words and phrases",
       "words": [
-        "boy", "girl", "mom", "dog", "cat", "black", "white", "red", "blue", "zero", "one", 
-        "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", 
-        "twelve", "apple", "man", "woman", "green", "yellow", "orange", "baby", "bag", "book", 
-        "box", "big", "small", "notebook", "nose", "mouth", "computer", "sister", "brother", 
-        "dad", "desk", "duck", "help", "sad", "bad", "grandma", "grandpa", "gift", "gray", 
-        "door", "house", "elephant", "egg", "eraser", "school", "pencil", "bed", "table", 
-        "test", "teacher", "pen", "pencil case", "hat", "add", "plus", "in", "on", "pupil", 
-        "picture", "chair", "lost", "ask", "play", "sing", "run", "rest", "hen", "rabbit", 
-        "best", "hand", "horse", "happy", "good", "tall", "fast", "ball", "sofa", "sun", 
-        "sunny", "hot", "cold", "living room", "farm", "mouse", "sheep", "tree", "friend", 
-        "job", "soft", "fun", "cow", "carrot", "leg", "brown", "they", "now", "hungry", 
-        "lamp", "mat", "milk", "floor", "garden", "kitchen", "mad", "lunch", "juice", "cookie", 
-        "chicken", "car", "plan", "eat", "family", "fish", "pet", "birthday", "card", "swim", 
-        "you", "under", "umbrella", "jump", "party", "game", "foot", "glad", "king", "water", 
-        "window", "queen", "eyes", "ears", "monkey", "zoo", "quiet", "top", "ice cream", 
-        "candy", "cake", "cut", "van", "magic", "head", "kid", "long", "great", "talk",
-        "friend", "grade", "house", "new", "school", "teacher", "town", "bird", 
-        "family", "fly", "lesson", "nice", "want", "talk", "English",
-        "board", "book", "chair", "eraser", "homework", "lunch", "need", "notebook", "paper", 
-        "pencil", "thanks", "what's your .....?", "street", "address", "phone number", "please", "live",
-        "how old ....?", "let's go", "have"
+        "friend", "grade", "house", "new", "school", "teacher", "town",
+        "What's your name?", "My name is ...", "Where do you live?", "I live in ...",
+        "bird", "brother", "English", "family", "fly", "lesson", "nice", "sister", "talk", "want",
+        "How old are you?", "I'm ... years old.", "I go to ... School.",
+        "board", "book", "chair", "eraser", "homework", "lunch", "need", "notebook", "paper", "pencil", "thanks",
+        "Do you have ... ?", "I don't have ...", "Let's go ...",
+        "address", "food", "me", "meet", "phone number", "please", "pupil", "see", "write",
+        "What's your ... ?", "It's ... Street.",
+        "art", "class", "computer", "day", "happy", "learn", "math", "music", "sports", "week",
+        "What's your favorite ... ?", "My favorite ... is ..."
       ]
     },
     "4th_grade_unit2": {
       "name": "Unit 2",
-      "description": "4th Grade Unit 2 words",
+      "description": "4th Grade Unit 2 words and phrases",
       "words": [
-        "basketball", "come", "game", "good for you", "okay", "park", "play", "sunny", "warm", "we", 
-        "eat", "football", "funny", "kite", "near", "old", "read", "spring", "stand", "tree", 
-        "who", "cloud", "eyes", "father", "home", "mother", "mouth", "nose", "picture", "sky", 
-        "sleep", "too", "boots", "children", "dress", "ice cream", "pants", "shirt", "shoes", "socks", 
-        "store", "they", "wear", "autumn", "beautiful", "climb", "coat", "cold", "make", "pool", 
-        "snow", "summer", "wall", "winter", "I want", "I can", "I can't", "I don't want", "There are", 
-        "There is", "Can you…?", "Do you want …?", "What's the weather today?", "Today is…."
+        "basketball", "come", "game", "good for you", "okay", "park", "play", "sunny", "warm", "we",
+        "What's the weather today?", "Today is ...",
+        "eat", "football", "funny", "kite", "near", "old", "read", "spring", "stand", "tree", "who",
+        "Can you ...?", "I can ...", "I can't ...",
+        "cloud", "eyes", "father", "home", "mother", "mouth", "nose", "picture", "sky", "sleep", "too",
+        "There's ...",
+        "boots", "children", "dress", "ice cream", "pants", "shirt", "shoes", "socks", "store", "they", "wear",
+        "Do you want ...?", "I want ...", "I don't want ...",
+        "autumn", "beautiful", "climb", "coat", "cold", "make", "pool", "snow", "summer", "wall", "winter",
+        "There are ..."
       ]
     },
     "4th_grade_unit3": {
       "name": "Unit 3",
-      "description": "4th Grade Unit 3 words",
+      "description": "4th Grade Unit 3 words and phrases",
       "words": [
-        "animal", "behind", "cool", "elephant", "face", "lion", "scared", "this", "turtle", "walk",
-        "water", "bath", "dinner", "dirty", "drink", "hungry", "listen", "thirsty", "tired", "wake up",
-        "with", "Arabic", "great", "Hebrew", "penguin", "people", "smile", "tricks", "try", "watch",
-        "woman", "beach", "birthday", "bring", "cake", "farm", "horse", "party", "ride", "sea",
-        "swimsuit", "when", "bike", "clean", "dance", "doctor", "floor", "hospital", "kitten", "table",
-        "How many..?", "What time is it?", "It's …. o'clock", "It's half past….", "What are you good at?",
-        "I'm good at…", "Please tell me….", "I know", "I don't know", "Good idea"
+        "animal", "behind", "cool", "elephant", "face", "lion", "scared", "this", "turtle", "walk", "water",
+        "How many ...?",
+        "bath", "dinner", "dirty", "drink", "hungry", "listen", "thirsty", "tired", "wake up", "with",
+        "What time is it?", "It's ... o'clock.", "It's half past ...",
+        "Arabic", "great", "Hebrew", "penguin", "people", "smile", "tricks", "try", "watch", "woman",
+        "What are you good at?", "I'm good at ...",
+        "beach", "birthday", "bring", "cake", "farm", "horse", "party", "ride", "sea", "swimsuit", "when",
+        "Please tell me ...",
+        "bike", "clean", "dance", "doctor", "floor", "hospital", "kitten", "table", "take",
+        "I know.", "I don't know.", "Good idea!"
       ]
     },
     "4th_grade_unit4": {
       "name": "Unit 4",
-      "description": "4th Grade Unit 4 words",
+      "description": "4th Grade Unit 4 words and phrases",
       "words": [
-        "angry", "apple", "bedroom", "be careful", "boat", "bread", "bus stop", "but", "buy", "cape",
-        "car", "cheese", "chicken", "chocolate", "clothes", "color", "come in", "cookie", "cross the street",
-        "driver", "ear", "from", "fruit", "go down", "go up", "going to", "helmet", "juice", "kitchen",
-        "little", "living room", "magic", "meat", "menu", "monkey", "next to", "now", "pink", "plane",
-        "police", "potato", "rain", "slowly", "soup", "station", "tomato", "train", "truck", "under",
-        "van", "very", "wet", "wind", "window", "wolf", "Are you...?", "Do you like....?", "He doesn't",
-        "She doesn't", "How are you going to...?", "by....", "How much ....?"
+        "be careful", "bus stop", "but", "car", "cross the street", "driver", "ears", "helmet", "now", "truck", "van",
+        "How much ... ?",
+        "apple", "chicken", "chocolate", "cookie", "fruit", "juice", "meat", "menu", "potato", "soup", "tomato",
+        "Do you like ... ?",
+        "angry", "bedroom", "bread", "cape", "cheese", "clothes", "come in", "little", "living room", "window", "wolf",
+        "He doesn't ...", "She doesn't ...",
+        "color", "from", "going to", "kitchen", "monkey", "next to", "police", "rain", "station", "under", "wind",
+        "Are you ... ?",
+        "boat", "buy", "go down", "go up", "magic", "pink", "plane", "slowly", "train", "very", "wet",
+        "How are you going to .. ?", "by train", "by boat", "by car", "by bus"
       ]
     },
     "3rd_grade_unit1": {
